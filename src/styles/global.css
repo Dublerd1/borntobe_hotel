@@ -173,12 +173,7 @@ nav.scrolled {
 
 /* ===== Room Cards ===== */
 .card-photo-tall {
-  aspect-ratio: 3/2;
-}
-@media (min-width: 768px) {
-  .card-photo-tall {
-    aspect-ratio: 3/4;
-  }
+  aspect-ratio: 4/3;
 }
 
 /* ===== Animations ===== */
