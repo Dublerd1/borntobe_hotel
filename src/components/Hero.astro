@@ -5,41 +5,36 @@ import { t } from '@utils/i18n'
 interface Props {
   lang: Lang
   backgroundImage: string
-  showBookingBar?: boolean
 }
 
-const { lang, backgroundImage, showBookingBar = false } = Astro.props
+const { lang, backgroundImage } = Astro.props
 const tr = t(lang)
 ---
 
 <section
-  class="h-screen relative flex flex-col items-center justify-center bg-cover bg-center"
+  class="h-screen relative flex flex-col items-center bg-cover bg-center"
   style={`background-image: url('${backgroundImage}'); background-position: center 40%;`}
   id="hero"
 >
   <!-- Overlay -->
-  <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.4) 100%);"></div>
+  <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.5) 100%);"></div>
 
   <!-- Title -->
-  <div class="relative z-10 text-center mb-20 md:mb-24 px-4">
+  <div class="relative z-10 text-center px-4" style="margin-top: 35vh;">
     <h1
-      class="text-white font-extrabold text-[32px] md:text-[56px] lg:text-[72px] tracking-hero uppercase mb-4 md:mb-5"
-      style="text-shadow: 0 2px 30px rgba(0,0,0,0.5);"
+      class="text-white font-extrabold text-[56px] md:text-[88px] lg:text-[110px] tracking-hero uppercase"
+      style="text-shadow: 0 2px 30px rgba(0,0,0,0.5); line-height: 1;"
     >
       {tr.hero.title}
     </h1>
     <p
-      class="text-white/80 font-medium text-[15px] md:text-[18px] lg:text-[20px] tracking-card"
-      style="text-shadow: 0 2px 30px rgba(0,0,0,0.5);"
+      class="text-white/80 italic font-medium text-[18px] md:text-[20px] lg:text-[22px] mt-6 md:mt-8"
+      style="letter-spacing: 0.15em; text-shadow: 0 2px 30px rgba(0,0,0,0.5);"
     >
       {tr.hero.subtitle}
     </p>
   </div>
 
-  <!-- Booking bar slot -->
-  {showBookingBar && (
-    <div class="absolute bottom-[60px] md:bottom-[80px] left-0 right-0 z-10 px-4 md:px-10 lg:px-20">
-      <slot />
-    </div>
-  )}
+  <!-- Slot for extra content (e.g. scroll indicator) -->
+  <slot />
 </section>

@@ -165,7 +165,7 @@ export default function StayBooking({ lang, rooms }: Props) {
         />
         <div className="relative z-10 text-center px-4" style={{ marginTop: '35vh' }}>
           <h1
-            className="text-white font-bold text-[56px] md:text-[88px] lg:text-[110px] uppercase"
+            className="text-white font-extrabold text-[56px] md:text-[88px] lg:text-[110px] uppercase"
             style={{ letterSpacing: '0.08em', textShadow: '0 2px 30px rgba(0,0,0,0.5)', lineHeight: 1 }}
           >
             {t.hero.title}
@@ -308,7 +308,7 @@ export default function StayBooking({ lang, rooms }: Props) {
       {/* ==================== RESULTS ==================== */}
       {searchParams && (
         <section id="results" ref={resultsRef} style={{ background: '#EDEAE6' }}>
-          <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 pt-32 md:pt-40 pb-10">
+          <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 pt-32 md:pt-40 pb-16">
             <div className="text-center mb-4">
               <h2 className="text-[28px] md:text-[40px] font-bold uppercase" style={{ letterSpacing: '0.06em', color: '#141414' }}>
                 {t.booking.selectYourStay}
@@ -334,7 +334,7 @@ export default function StayBooking({ lang, rooms }: Props) {
 
                 return (
                   <div key={room.id} className="fade-up cursor-pointer overflow-hidden transition-[box-shadow,transform] duration-300 flex flex-col"
-                    style={{ background: '#FFFFFF', transitionDelay: `${i*0.08}s` }}
+                    style={{ background: '#FFFFFF', border: '1px solid #D9D5D0', transitionDelay: `${i*0.08}s` }}
                     onClick={() => { setModalRoom(room); setModalNights(nights); setActivePhoto(0); document.body.style.overflow = 'hidden' }}
                     onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.12)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
                     onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none' }}

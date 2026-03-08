@@ -11,60 +11,79 @@ const lang = 'en'
   lang={lang}
   canonical="https://borntobecomplex.com/"
 >
-  <Hero lang={lang} backgroundImage="/content/photos/01-hero/night_facade_pool_float.jpg">
-    <div slot="default"></div>
-  </Hero>
+  <Hero lang={lang} backgroundImage="/content/photos/01-hero/night_facade_pool_float.jpg" />
 
-  <!-- Stay Preview -->
-  <section class="bg-bg py-24 md:py-32">
-    <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20">
-      <div class="text-center mb-16">
-        <h2 class="text-[28px] md:text-[40px] font-bold tracking-section uppercase mb-4">Stay</h2>
-        <div class="w-12 h-[2px] bg-gold mx-auto mb-6"></div>
-        <p class="text-muted text-[15px] max-w-[560px] mx-auto leading-relaxed">
-          9 unique apartments and townhouses. Each with its own character, view, and story. From cozy studios to spacious two-floor townhouses.
-        </p>
+  <!-- Stay Preview — split: photo left, text right -->
+  <section class="bg-bg">
+    <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row">
+      <div class="md:w-1/2">
+        <img
+          src="content/photos/01-hero/townhouse_bedroom_rice_terrace.jpg"
+          alt="Apartment interior with rice terrace view"
+          class="w-full h-full object-cover"
+          style="aspect-ratio: 4/5;"
+          loading="lazy"
+        />
       </div>
-      <div class="text-center">
-        <a href="/stay" class="inline-block bg-dark text-cream text-[14px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold transition-colors duration-300 cursor-pointer">
-          View Rooms & Book
-        </a>
+      <div class="md:w-1/2 flex items-center px-6 md:px-16 lg:px-24 py-20 md:py-32">
+        <div>
+          <p class="text-[11px] font-medium tracking-caption uppercase text-muted mb-4">Pererenan, Bali</p>
+          <h2 class="text-[32px] md:text-[44px] font-bold tracking-section uppercase mb-6">Stay</h2>
+          <div class="w-12 h-[2px] bg-gold mb-8"></div>
+          <p class="text-muted text-[16px] md:text-[17px] leading-relaxed mb-10 max-w-[440px]">
+            9 unique apartments and townhouses. Each with its own character, view, and story. From cozy studios to spacious two-floor townhouses with rice terrace views.
+          </p>
+          <a href="/stay" class="inline-block bg-dark text-cream text-[13px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold transition-colors duration-300 cursor-pointer">
+            View Rooms & Book
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Eat Preview -->
-  <section class="bg-night py-24 md:py-32">
-    <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20">
-      <div class="text-center mb-16">
-        <h2 class="text-[28px] md:text-[40px] font-bold tracking-section uppercase text-cream mb-4">Eat</h2>
-        <div class="w-12 h-[2px] bg-gold mx-auto mb-6"></div>
-        <p class="text-cream/60 text-[15px] max-w-[560px] mx-auto leading-relaxed">
-          Our cafe serves healthy, soulful food. Smoothie bowls, fresh juices, signature dishes. Open for guests and locals.
+  <!-- Eat Preview — full-bleed photo background -->
+  <section class="relative min-h-[600px] md:min-h-[700px] flex items-center bg-cover bg-center"
+    style="background-image: url('content/photos/05-cafe/woman_matcha_healthy_spread.jpg');">
+    <div class="absolute inset-0" style="background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);"></div>
+    <div class="relative z-10 max-w-[1440px] mx-auto px-6 md:px-16 lg:px-24 py-20">
+      <div class="max-w-[480px]">
+        <p class="text-[11px] font-medium tracking-caption uppercase text-white/50 mb-4">Healthy & Soulful</p>
+        <h2 class="text-[32px] md:text-[44px] font-bold tracking-section uppercase text-cream mb-6">Eat</h2>
+        <div class="w-12 h-[2px] bg-gold mb-8"></div>
+        <p class="text-cream/70 text-[16px] md:text-[17px] leading-relaxed mb-10">
+          Our cafe serves healthy, soulful food. Smoothie bowls, fresh juices, signature dishes. Open for guests and locals alike.
         </p>
-      </div>
-      <div class="text-center">
-        <a href="/eat" class="inline-block border border-cream text-cream text-[14px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold hover:border-gold transition-colors duration-300 cursor-pointer">
+        <a href="/eat" class="inline-block border border-cream/70 text-cream text-[13px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold hover:border-gold transition-colors duration-300 cursor-pointer">
           Explore Menu
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Community Preview -->
-  <section class="bg-bg py-24 md:py-32">
-    <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20">
-      <div class="text-center mb-16">
-        <h2 class="text-[28px] md:text-[40px] font-bold tracking-section uppercase mb-4">Live</h2>
-        <div class="w-12 h-[2px] bg-gold mx-auto mb-6"></div>
-        <p class="text-muted text-[15px] max-w-[560px] mx-auto leading-relaxed">
-          More than a hotel. Rooftop events, fitness, co-working, Born To Be Wear brand. A community of like-minded people.
-        </p>
+  <!-- Community Preview — split: text left, photo right -->
+  <section class="bg-bg">
+    <div class="max-w-[1440px] mx-auto flex flex-col-reverse md:flex-row">
+      <div class="md:w-1/2 flex items-center px-6 md:px-16 lg:px-24 py-20 md:py-32">
+        <div>
+          <p class="text-[11px] font-medium tracking-caption uppercase text-muted mb-4">More than a hotel</p>
+          <h2 class="text-[32px] md:text-[44px] font-bold tracking-section uppercase mb-6">Live</h2>
+          <div class="w-12 h-[2px] bg-gold mb-8"></div>
+          <p class="text-muted text-[16px] md:text-[17px] leading-relaxed mb-10 max-w-[440px]">
+            Rooftop events with volcano views, fitness, co-working, Born To Be Wear brand. A community of like-minded people who chose to live, not just exist.
+          </p>
+          <a href="/community" class="inline-block bg-dark text-cream text-[13px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold transition-colors duration-300 cursor-pointer">
+            Discover Community
+          </a>
+        </div>
       </div>
-      <div class="text-center">
-        <a href="/community" class="inline-block bg-dark text-cream text-[14px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold transition-colors duration-300 cursor-pointer">
-          Discover Community
-        </a>
+      <div class="md:w-1/2">
+        <img
+          src="content/photos/06-rooftop/rooftop_volcano_panorama.jpg"
+          alt="Rooftop with volcano view"
+          class="w-full h-full object-cover"
+          style="aspect-ratio: 4/5;"
+          loading="lazy"
+        />
       </div>
     </div>
   </section>
