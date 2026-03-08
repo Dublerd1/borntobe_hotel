@@ -49,9 +49,11 @@ export default function StayBooking({ lang, rooms }: Props) {
   const [children, setChildren] = useState(0)
   const [propertyType, setPropertyType] = useState('any')
 
-  // Highlight range between check-in and check-out on calendars
-  const highlightRange = useCallback((refs: React.RefObject<HTMLInputElement | null>[]) => {
-    // Determine which set of pickers to use
+  // Highlight range between check-in and check-out (or hovered date) on calendars
+  const highlightRange = useCallback((
+    refs: React.RefObject<HTMLInputElement | null>[],
+    hoverDate?: Date | null
+  ) => {
     const isModal = refs.length > 0 && refs.some(r => r === modalCheckInRef || r === modalCheckOutRef)
     const ciRefs = isModal ? [modalCheckInRef] : [checkInRef, checkInMobileRef]
     const coRefs = isModal ? [modalCheckOutRef] : [checkOutRef, checkOutMobileRef]
@@ -67,17 +69,43 @@ export default function StayBooking({ lang, rooms }: Props) {
       const fp = (ref.current as any)?._flatpickr
       if (fp?.selectedDates[0]) coDate = fp.selectedDates[0]
     })
+    // If hovering, use hover date as end of range
+    const endDate = hoverDate ?? coDate
     allRefs.forEach(ref => {
       const fp = (ref.current as any)?._flatpickr
       if (!fp?.calendarContainer) return
       fp.calendarContainer.querySelectorAll('.flatpickr-day').forEach((dayEl: HTMLElement) => {
         const dayDate = (dayEl as any).dateObj as Date | undefined
-        if (!dayDate || !ciDate || !coDate) { dayEl.classList.remove('in-range-custom'); return }
-        const inRange = dayDate > ciDate && dayDate < coDate
+        if (!dayDate || !ciDate || !endDate) { dayEl.classList.remove('in-range-custom'); return }
+        const inRange = dayDate > ciDate && dayDate < endDate
         dayEl.classList.toggle('in-range-custom', inRange)
       })
     })
   }, [])
+
+  // Attach hover listeners to a flatpickr calendar for range preview
+  const attachHoverListeners = useCallback((fp: any, ciRefs: React.RefObject<HTMLInputElement | null>[], targetRefs: React.RefObject<HTMLInputElement | null>[]) => {
+    if (!fp?.calendarContainer) return
+    fp.calendarContainer.addEventListener('mouseover', (e: MouseEvent) => {
+      const dayEl = (e.target as HTMLElement).closest('.flatpickr-day') as HTMLElement | null
+      if (!dayEl) return
+      const hoverDate = (dayEl as any).dateObj as Date | undefined
+      if (!hoverDate) return
+      // Only show hover trail if we have a check-in date
+      let ciDate: Date | null = null
+      ciRefs.forEach(ref => {
+        const fpCI = (ref.current as any)?._flatpickr
+        if (fpCI?.selectedDates[0]) ciDate = fpCI.selectedDates[0]
+      })
+      if (ciDate && hoverDate > ciDate) {
+        highlightRange(targetRefs, hoverDate)
+      }
+    })
+    fp.calendarContainer.addEventListener('mouseleave', () => {
+      // Restore to selected range
+      highlightRange(targetRefs)
+    })
+  }, [highlightRange])
 
   // Init Flatpickr
   useEffect(() => {
@@ -142,6 +170,13 @@ export default function StayBooking({ lang, rooms }: Props) {
       if (checkOutRef.current) flatpickr(checkOutRef.current, createOpts(true))
       if (checkInMobileRef.current) flatpickr(checkInMobileRef.current, createOpts(false))
       if (checkOutMobileRef.current) flatpickr(checkOutMobileRef.current, createOpts(true))
+      // Attach hover trail listeners
+      const heroRefs: React.RefObject<HTMLInputElement | null>[] = []
+      const heroCIRefs = [checkInRef, checkInMobileRef]
+      ;[checkInRef, checkOutRef, checkInMobileRef, checkOutMobileRef].forEach(ref => {
+        const fp = (ref.current as any)?._flatpickr
+        if (fp) attachHoverListeners(fp, heroCIRefs, [])
+      })
       // Initial highlight
       setTimeout(() => highlightRange([]), 100)
     }
@@ -209,6 +244,13 @@ export default function StayBooking({ lang, rooms }: Props) {
           },
         })
       }
+      // Attach hover trail listeners to modal calendars
+      const modalCIRefs = [modalCheckInRef]
+      const modalTargetRefs = [modalCheckInRef, modalCheckOutRef]
+      ;[modalCheckInRef, modalCheckOutRef].forEach(ref => {
+        const fp = (ref.current as any)?._flatpickr
+        if (fp) attachHoverListeners(fp, modalCIRefs, modalTargetRefs)
+      })
     }
     // Small delay to ensure DOM is ready
     const timer = setTimeout(initModalPickers, 50)
