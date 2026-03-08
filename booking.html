@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Born To Be Complex — Book Your Stay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        tailwindcss.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: '#F7F5F2',
+                        surface: '#EDEAE6',
+                        dark: '#141414',
+                        gold: '#C8965A',
+                        muted: '#5C5C5C',
+                        border: '#D9D5D0',
+                        night: '#111111',
+                        cream: '#F7F5F2',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #F7F5F2; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F7F5F2; }
+        ::-webkit-scrollbar-thumb { background: #D9D5D0; }
+
+        /* ========== HERO ========== */
+        .hero {
+            background-image: url('content/photos/01-hero/night_facade_pool_float.jpg');
+            background-size: cover;
+            background-position: center 40%;
+            position: relative;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.4) 0%,
+                rgba(0,0,0,0.1) 30%,
+                rgba(0,0,0,0.1) 60%,
+                rgba(0,0,0,0.4) 100%
+            );
+        }
+
+        /* ========== NAVBAR ========== */
+        .nav {
+            transition: background 0.3s ease, backdrop-filter 0.3s ease;
+        }
+        .nav.scrolled {
+            background: #141414 !important;
+        }
+        .nav-book-btn {
+            background: #F7F5F2; color: #141414;
+            transition: all 0.3s ease;
+            border-radius: 0;
+        }
+        .nav-book-btn:hover {
+            background: #C8965A; color: #F7F5F2;
+        }
+
+        /* ========== BOOKING BAR ========== */
+        .booking-bar-glass {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0;
+        }
+        .booking-divider {
+            width: 1px;
+            height: 40px;
+            background: rgba(255,255,255,0.15);
+            flex-shrink: 0;
+        }
+        .booking-bar-glass select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M5 7L0 2h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 4px center;
+        }
+        .booking-bar-glass select option {
+            background: #141414;
+            color: white;
+        }
+        .search-btn {
+            background: white; color: black;
+            font-weight: 600; font-size: 14px;
+            letter-spacing: 1.5px;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+        .search-btn:hover {
+            background: #C8965A; color: #F7F5F2;
+        }
+
+        /* Sticky booking — merges with navbar as one dark band */
+        .booking-wrapper.sticky {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            padding: 0;
+            width: 100%;
+        }
+        .booking-wrapper.sticky .booking-bar-glass {
+            border-radius: 0;
+            background: #141414;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            max-width: 100%;
+            padding: 0 40px;
+        }
+        @media (min-width: 1024px) {
+            .booking-wrapper.sticky .booking-bar-glass {
+                padding: 0 80px;
+            }
+        }
+        .booking-wrapper.sticky .booking-bar-glass .flex-1,
+        .booking-wrapper.sticky .booking-bar-glass [class*="flex-[0.6]"] {
+            padding: 8px 16px;
+        }
+        .booking-wrapper.sticky .booking-bar-glass label {
+            font-size: 9px;
+            margin-bottom: 1px;
+        }
+        .booking-wrapper.sticky .booking-bar-glass input,
+        .booking-wrapper.sticky .booking-bar-glass select {
+            font-size: 13px;
+        }
+        .booking-wrapper.sticky .search-btn {
+            padding: 8px 24px;
+            font-size: 11px;
+            margin: 0;
+            background: #C8965A;
+            color: #F7F5F2;
+        }
+        .booking-wrapper.sticky .search-btn:hover {
+            background: #F7F5F2;
+            color: #141414;
+        }
+        .booking-wrapper.sticky .booking-divider {
+            height: 24px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* ========== FLATPICKR ========== */
+        .flatpickr-calendar {
+            border-radius: 0 !important;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.2) !important;
+            border: 1px solid #D9D5D0 !important;
+            font-family: 'Inter', sans-serif !important;
+            padding: 8px !important;
+            z-index: 9999 !important;
+        }
+        .flatpickr-calendar.open {
+            z-index: 9999 !important;
+        }
+        .flatpickr-months { padding: 8px 4px !important; }
+        .flatpickr-months .flatpickr-month { height: 40px !important; }
+        .flatpickr-current-month {
+            font-size: 14px !important; font-weight: 600 !important;
+            letter-spacing: 0.04em !important; text-transform: uppercase !important;
+        }
+        span.flatpickr-weekday {
+            color: #5C5C5C !important; font-size: 11px !important;
+            font-weight: 500 !important; text-transform: uppercase !important;
+        }
+        .flatpickr-day {
+            border-radius: 0 !important; font-size: 14px !important;
+            color: #141414 !important; height: 38px !important; line-height: 38px !important;
+        }
+        .flatpickr-day:hover { background: #EDEAE6 !important; border-color: transparent !important; }
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+            background: #141414 !important; border-color: #141414 !important; color: #F7F5F2 !important;
+        }
+        .flatpickr-day.inRange {
+            background: #EDEAE6 !important; border-color: #EDEAE6 !important;
+            box-shadow: -5px 0 0 #EDEAE6, 5px 0 0 #EDEAE6 !important;
+        }
+        .flatpickr-day.today { border-color: #C8965A !important; }
+        .flatpickr-day.today:hover { background: #C8965A !important; color: #fff !important; }
+        .flatpickr-day.flatpickr-disabled { color: #D9D5D0 !important; }
+        .flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill: #C8965A !important; }
+        .flatpickr-input { cursor: pointer !important; }
+
+        /* ========== CARDS ========== */
+        .room-card {
+            border-radius: 0;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+            background: #F7F5F2;
+        }
+        .room-card:hover {
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            transform: translateY(-2px);
+        }
+        .room-card img {
+            aspect-ratio: 3/2;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.6s ease;
+        }
+        .room-card:hover img {
+            transform: scale(1.03);
+        }
+        .room-card .card-cta {
+            background: #141414;
+            color: #F7F5F2;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 14px 0;
+            text-align: center;
+            transition: background 0.3s ease;
+            display: block;
+            width: 100%;
+        }
+        .room-card:hover .card-cta {
+            background: #C8965A;
+        }
+
+        /* ========== MODAL ========== */
+        .modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-content { transform: translateY(40px); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .gallery-thumb { opacity: 0.5; transition: opacity 0.2s ease; cursor: pointer; border-radius: 0; }
+        .gallery-thumb.active, .gallery-thumb:hover { opacity: 1; }
+        .msg-btn {
+            transition: background 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+            border-radius: 0;
+        }
+        .msg-btn:hover { background: #C8965A !important; color: #F7F5F2 !important; border-color: #C8965A !important; }
+
+        /* Fade in */
+        .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* ========== MOBILE ========== */
+        @media (max-width: 767px) {
+            .booking-bar-glass {
+                border-radius: 0 !important;
+                border: none;
+            }
+            .booking-wrapper.sticky {
+                top: 64px;
+                padding: 0;
+            }
+            .booking-wrapper.sticky .booking-bar-glass {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-bg text-dark antialiased">
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav id="navbar" class="nav fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 h-20 flex items-center justify-between">
+            <a href="#" class="text-white font-bold text-sm tracking-[0.12em] uppercase transition-colors duration-300">
+                BORN TO BE
+            </a>
+            <div class="hidden md:flex items-center gap-10">
+                <a href="#" class="text-white/[0.85] text-[13px] font-medium tracking-[0.1em] uppercase hover:text-white transition-opacity duration-300">Stay</a>
+                <a href="#" class="text-white/[0.85] text-[13px] font-medium tracking-[0.1em] uppercase hover:text-white transition-opacity duration-300">Eat</a>
+                <a href="#" class="text-white/[0.85] text-[13px] font-medium tracking-[0.1em] uppercase hover:text-white transition-opacity duration-300">Live</a>
+                <a href="#" class="text-white/[0.85] text-[13px] font-medium tracking-[0.1em] uppercase hover:text-white transition-opacity duration-300">Location</a>
+            </div>
+            <div class="hidden md:flex items-center gap-6">
+                <button id="langToggle" class="text-white/70 text-[13px] font-normal tracking-[0.1em] uppercase hover:text-white transition-colors duration-300 cursor-pointer">RU</button>
+                <a href="#booking" class="nav-book-btn text-[13px] font-semibold tracking-[1.5px] uppercase px-6 py-2.5 cursor-pointer">BOOK</a>
+            </div>
+            <button id="mobileMenuBtn" class="md:hidden text-white cursor-pointer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-[60] bg-night flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-300">
+        <button id="mobileMenuClose" class="absolute top-6 right-6 text-cream cursor-pointer">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <a href="#" class="text-cream text-2xl font-light tracking-[0.06em] uppercase">Stay</a>
+        <a href="#" class="text-cream text-2xl font-light tracking-[0.06em] uppercase">Eat</a>
+        <a href="#" class="text-cream text-2xl font-light tracking-[0.06em] uppercase">Live</a>
+        <a href="#" class="text-cream text-2xl font-light tracking-[0.06em] uppercase">Location</a>
+        <div class="mt-4">
+            <a href="#booking" class="bg-cream text-dark text-[13px] font-semibold tracking-[0.1em] uppercase px-10 py-4 cursor-pointer hover:bg-gold hover:text-cream transition-colors duration-300">BOOK</a>
+        </div>
+        <button class="text-cream/50 text-sm tracking-[0.1em] uppercase mt-4 cursor-pointer" onclick="toggleLang()">RU</button>
+    </div>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero h-screen relative flex flex-col items-center justify-center" id="hero">
+        <div class="hero-overlay"></div>
+
+        <!-- Title -->
+        <div class="relative z-10 text-center mb-20 md:mb-24 px-4">
+            <h1 class="text-white font-extrabold text-[32px] md:text-[56px] lg:text-[72px] tracking-[0.08em] uppercase mb-4 md:mb-5" style="text-shadow: 0 2px 30px rgba(0,0,0,0.5);" data-en="BORN TO BE" data-ru="BORN TO BE">
+                BORN TO BE
+            </h1>
+            <p class="text-white/80 font-medium text-[15px] md:text-[18px] lg:text-[20px] tracking-[0.02em]" style="text-shadow: 0 2px 30px rgba(0,0,0,0.5);" data-en="Don't pretend, just be" data-ru="Перестаньте казаться, будьте">
+                Don't pretend, just be
+            </p>
+        </div>
+
+        <!-- Booking Bar -->
+        <div id="bookingWrapper" class="booking-wrapper absolute bottom-[60px] md:bottom-[80px] left-0 right-0 z-10 px-4 md:px-10 lg:px-20">
+            <div class="booking-bar-glass max-w-[900px] mx-auto px-0">
+                <!-- Desktop: single row -->
+                <div class="hidden md:flex items-center">
+                    <div class="flex-1 px-6 py-5">
+                        <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="CHECK-IN" data-ru="ЗАЕЗД">CHECK-IN</label>
+                        <input type="text" id="checkIn" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none cursor-pointer" placeholder="Select" />
+                    </div>
+                    <div class="booking-divider"></div>
+                    <div class="flex-1 px-6 py-5">
+                        <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="CHECK-OUT" data-ru="ВЫЕЗД">CHECK-OUT</label>
+                        <input type="text" id="checkOut" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none cursor-pointer" placeholder="Select" />
+                    </div>
+                    <div class="booking-divider"></div>
+                    <div class="flex-1 px-6 py-5">
+                        <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="GUESTS" data-ru="ГОСТИ">GUESTS</label>
+                        <select id="guests" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none pr-5 cursor-pointer">
+                            <option value="1">1 Adult</option>
+                            <option value="2" selected>2 Adults</option>
+                            <option value="3">3 Adults</option>
+                            <option value="4">4 Adults</option>
+                            <option value="5">5 Adults</option>
+                            <option value="6">6 Adults</option>
+                        </select>
+                    </div>
+                    <div class="booking-divider"></div>
+                    <div class="flex-[0.6] px-5 py-5">
+                        <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="CHILDREN" data-ru="ДЕТИ">CHILDREN</label>
+                        <select id="children" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none pr-5 cursor-pointer">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div class="booking-divider"></div>
+                    <div class="flex-1 px-5 py-5">
+                        <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="TYPE" data-ru="ТИП">TYPE</label>
+                        <select id="propertyType" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none pr-5 cursor-pointer">
+                            <option value="any">Any</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="deluxe">Deluxe Apt</option>
+                            <option value="townhouse">Townhouse</option>
+                        </select>
+                    </div>
+                    <button id="searchBtn" class="search-btn uppercase px-7 py-5 flex-shrink-0 cursor-pointer flex items-center gap-2 text-[13px] tracking-[1.5px]" style="margin: -1px -1px -1px 0;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        SEARCH
+                    </button>
+                </div>
+                <!-- Mobile: stacked -->
+                <div class="md:hidden flex flex-col">
+                    <div class="flex">
+                        <div class="flex-1 px-5 py-4 border-b border-white/10">
+                            <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="CHECK-IN" data-ru="ЗАЕЗД">CHECK-IN</label>
+                            <input type="text" id="checkInMobile" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none cursor-pointer" placeholder="Select" />
+                        </div>
+                        <div class="w-px bg-white/10"></div>
+                        <div class="flex-1 px-5 py-4 border-b border-white/10">
+                            <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="CHECK-OUT" data-ru="ВЫЕЗД">CHECK-OUT</label>
+                            <input type="text" id="checkOutMobile" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none cursor-pointer" placeholder="Select" />
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-1 px-5 py-4 border-b border-white/10">
+                            <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="GUESTS" data-ru="ГОСТИ">GUESTS</label>
+                            <select id="guestsMobile" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none pr-5 cursor-pointer">
+                                <option value="1">1 Adult</option><option value="2" selected>2 Adults</option><option value="3">3 Adults</option><option value="4">4 Adults</option><option value="5">5 Adults</option><option value="6">6 Adults</option>
+                            </select>
+                        </div>
+                        <div class="w-px bg-white/10"></div>
+                        <div class="flex-[0.6] px-5 py-4 border-b border-white/10">
+                            <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="CHILDREN" data-ru="ДЕТИ">CHILDREN</label>
+                            <select id="childrenMobile" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none pr-5 cursor-pointer">
+                                <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+                            </select>
+                        </div>
+                        <div class="w-px bg-white/10"></div>
+                        <div class="flex-1 px-5 py-4 border-b border-white/10">
+                            <label class="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1" data-en="TYPE" data-ru="ТИП">TYPE</label>
+                            <select id="propertyTypeMobile" class="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none pr-5 cursor-pointer">
+                                <option value="any">Any</option><option value="apartment">Apartment</option><option value="deluxe">Deluxe Apt</option><option value="townhouse">Townhouse</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="searchBtnMobile" class="search-btn uppercase w-full py-4 cursor-pointer text-[13px] tracking-[1.5px] font-semibold" style="border-radius:0 !important;">SEARCH</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== RESULTS ==================== -->
+    <section id="results" class="hidden bg-night">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 pt-32 md:pt-40 pb-10">
+            <div class="text-center mb-4">
+                <h2 class="text-[28px] md:text-[40px] font-bold tracking-[0.06em] uppercase text-cream" data-en="SELECT YOUR STAY" data-ru="ВЫБЕРИТЕ НОМЕР">SELECT YOUR STAY</h2>
+                <div class="w-12 h-[2px] bg-gold mx-auto mt-4 mb-3"></div>
+                <p id="resultCount" class="text-cream/50 text-[13px] tracking-[0.1em] uppercase"></p>
+            </div>
+        </div>
+        <div id="roomGrid" class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 pb-32">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer id="footer" class="bg-night border-t border-white/10">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20 py-16 md:py-24">
+            <div class="flex flex-col md:flex-row justify-between items-start gap-12">
+                <div>
+                    <p class="text-cream font-bold text-sm tracking-[0.12em] uppercase mb-3">BORN TO BE</p>
+                    <p class="text-cream/50 text-[13px] tracking-[0.02em] max-w-[280px] leading-relaxed">A lifestyle ecosystem in Pererenan, Bali. Stay, eat, move, connect — all in one place.</p>
+                </div>
+                <div class="flex flex-col md:flex-row gap-12">
+                    <div>
+                        <p class="text-[11px] font-medium tracking-[0.1em] uppercase text-cream/40 mb-4">NAVIGATE</p>
+                        <div class="flex flex-col gap-3">
+                            <a href="#" class="text-cream/70 text-[13px] tracking-[0.04em] hover:text-gold transition-colors duration-300">Stay</a>
+                            <a href="#" class="text-cream/70 text-[13px] tracking-[0.04em] hover:text-gold transition-colors duration-300">Eat</a>
+                            <a href="#" class="text-cream/70 text-[13px] tracking-[0.04em] hover:text-gold transition-colors duration-300">Live</a>
+                            <a href="#" class="text-cream/70 text-[13px] tracking-[0.04em] hover:text-gold transition-colors duration-300">Location</a>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-medium tracking-[0.1em] uppercase text-cream/40 mb-4">CONNECT</p>
+                        <div class="flex flex-col gap-3">
+                            <a href="https://instagram.com/borntobe.complex" target="_blank" class="text-cream/70 text-[13px] tracking-[0.04em] hover:text-gold transition-colors duration-300">Instagram</a>
+                            <a href="https://t.me/borntobe_complex" target="_blank" class="text-cream/70 text-[13px] tracking-[0.04em] hover:text-gold transition-colors duration-300">Telegram</a>
+                            <a href="#" class="text-cream/70 text-[13px] tracking-[0.04em] hover:text-gold transition-colors duration-300">WhatsApp</a>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-medium tracking-[0.1em] uppercase text-cream/40 mb-4">LOCATION</p>
+                        <p class="text-cream/70 text-[13px] tracking-[0.02em] leading-relaxed">Pererenan, Bali<br>#1 Coolest Neighborhood<br>in Asia — Time Out 2024</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-cream/30 text-[12px] tracking-[0.04em]">&copy; 2024 Born To Be. All rights reserved.</p>
+                <p class="text-cream/30 text-[12px] tracking-[0.08em] uppercase">Don't pretend, just be</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== MODAL ==================== -->
+    <div id="modal" class="modal-overlay fixed inset-0 z-[70] bg-black/70 flex items-center justify-center p-4">
+        <div class="modal-content bg-white max-w-[1100px] w-full max-h-[90vh] overflow-y-auto relative">
+            <button id="modalClose" class="absolute top-4 right-4 md:top-6 md:right-6 z-10 w-10 h-10 bg-dark text-cream flex items-center justify-center hover:bg-gold transition-colors duration-300 cursor-pointer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-[55%]">
+                    <div class="aspect-[4/3] overflow-hidden"><img id="modalMainImg" src="" alt="" class="w-full h-full object-cover" /></div>
+                    <div id="modalThumbs" class="flex gap-2 p-4 overflow-x-auto"></div>
+                </div>
+                <div class="md:w-[45%] p-6 md:p-8 flex flex-col">
+                    <h3 id="modalTitle" class="text-xl md:text-2xl font-bold tracking-[0.04em] uppercase"></h3>
+                    <div class="w-10 h-[2px] bg-dark mt-3 mb-6"></div>
+                    <div id="modalDetails" class="grid grid-cols-2 gap-4 mb-6"></div>
+                    <div class="bg-surface p-5 mb-6">
+                        <div class="flex items-baseline justify-between">
+                            <div>
+                                <span id="modalPrice" class="text-2xl font-bold"></span>
+                                <span class="text-muted text-sm" data-en=" / night" data-ru=" / ночь"> / night</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-muted text-sm" data-en="Total: " data-ru="Итого: ">Total: </span>
+                                <span id="modalTotalPrice" class="font-bold"></span>
+                            </div>
+                        </div>
+                        <div id="modalDates" class="text-muted text-sm mt-2"></div>
+                    </div>
+                    <div class="mb-6 text-sm text-muted space-y-1">
+                        <p class="font-medium text-dark text-[11px] tracking-[0.1em] uppercase mb-2" data-en="PRICE TIERS" data-ru="ТАРИФЫ">PRICE TIERS</p>
+                        <div id="modalTiers" class="space-y-1"></div>
+                    </div>
+                    <div class="flex-1"></div>
+                    <p class="text-[11px] font-medium tracking-[0.1em] uppercase text-muted mb-3" data-en="BOOK VIA MESSENGER" data-ru="ЗАБРОНИРОВАТЬ ЧЕРЕЗ">BOOK VIA MESSENGER</p>
+                    <div class="flex flex-col gap-3">
+                        <button onclick="bookVia('telegram')" class="msg-btn w-full border border-dark text-dark text-[13px] font-semibold tracking-[0.08em] uppercase py-4 flex items-center justify-center gap-3 cursor-pointer">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.429-.013-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.12.098.153.229.168.332.016.103.036.327.02.504z"/></svg>
+                            Telegram
+                        </button>
+                        <button onclick="bookVia('whatsapp')" class="msg-btn w-full border border-dark text-dark text-[13px] font-semibold tracking-[0.08em] uppercase py-4 flex items-center justify-center gap-3 cursor-pointer">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-11.416c-5.523 0-10 4.477-10 10 0 1.76.46 3.478 1.335 4.992l-1.42 5.184 5.32-1.394c1.44.788 3.09 1.218 4.765 1.218 5.523 0 10-4.477 10-10s-4.477-10-10-10z"/></svg>
+                            WhatsApp
+                        </button>
+                        <button onclick="bookVia('instagram')" class="msg-btn w-full border border-dark text-dark text-[13px] font-semibold tracking-[0.08em] uppercase py-4 flex items-center justify-center gap-3 cursor-pointer">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            Instagram
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+    // ===== DATA =====
+    const rooms = [
+        { id:'standard', name:'Standard', nameRu:'Стандарт', type:'apartment', typeLabel:'Apartment', typeLabelRu:'Апартамент', floor:'2nd floor', floorRu:'2 этаж', view:'Garden view', viewRu:'Вид на сад', kitchen:false, area:'38 m²', maxGuests:2,
+          prices:[{min:1,max:6,perNight:65},{min:7,max:13,perNight:55},{min:14,max:27,perNight:50},{min:28,max:999,perMonth:1200}],
+          photos:['content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/1.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/2.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/3.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/4.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/5.jpeg']},
+        { id:'panorama', name:'Panorama View', nameRu:'Панорамный вид', type:'apartment', typeLabel:'Apartment', typeLabelRu:'Апартамент', floor:'3rd floor', floorRu:'3 этаж', view:'Panoramic view', viewRu:'Панорамный вид', kitchen:false, area:'38 m²', maxGuests:2,
+          prices:[{min:1,max:6,perNight:70},{min:7,max:13,perNight:60},{min:14,max:27,perNight:55},{min:28,max:999,perMonth:1300}],
+          photos:['content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/6.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/7.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/8.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/9.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/10.jpeg']},
+        { id:'rice-terrace', name:'Rice Terrace', nameRu:'Рисовые Террасы', type:'apartment', typeLabel:'Apartment', typeLabelRu:'Апартамент', floor:'4th floor', floorRu:'4 этаж', view:'Rice terrace view', viewRu:'Вид на рисовые террасы', kitchen:false, area:'38 m²', maxGuests:2,
+          prices:[{min:1,max:6,perNight:75},{min:7,max:13,perNight:65},{min:14,max:27,perNight:60},{min:28,max:999,perMonth:1400}],
+          photos:['content/photos/01-hero/apt_spr_balcony_rice_terrace.jpg','content/photos/02-apartments/apt_spr_1.jpg','content/photos/02-apartments/apt_spr_2.jpg','content/photos/02-apartments/apt_spr_3.jpg','content/photos/02-apartments/apt_spr_4.jpg']},
+        { id:'deluxe', name:'Deluxe', nameRu:'Делюкс', type:'deluxe', typeLabel:'Deluxe Apartment', typeLabelRu:'Делюкс Апартамент', floor:'2nd–3rd floor', floorRu:'2–3 этаж', view:'Pool & garden view', viewRu:'Вид на бассейн и сад', kitchen:false, area:'45 m²', maxGuests:3,
+          prices:[{min:1,max:6,perNight:75},{min:7,max:13,perNight:65},{min:14,max:27,perNight:55},{min:28,max:999,perMonth:1500}],
+          photos:['content/photos/04-deluxe/deluxe_living_pool_view.jpg','content/photos/04-deluxe/ig_room_wide_angle.jpg','content/photos/04-deluxe/ig_bedroom_ambient_lighting.jpg','content/photos/04-deluxe/ig_room_entry_glass_block.jpg']},
+        { id:'deluxe-plus', name:'Deluxe Plus', nameRu:'Делюкс Плюс', type:'deluxe', typeLabel:'Deluxe Apartment', typeLabelRu:'Делюкс Апартамент', floor:'3rd–4th floor', floorRu:'3–4 этаж', view:'Rice terrace & pool', viewRu:'Вид на террасы и бассейн', kitchen:false, area:'50 m²', maxGuests:3,
+          prices:[{min:1,max:6,perNight:80},{min:7,max:13,perNight:75},{min:14,max:27,perNight:60},{min:28,max:999,perMonth:1650}],
+          photos:['content/photos/02-apartments/apt_spr_2.jpg','content/photos/02-apartments/apt_spr_4.jpg','content/photos/02-apartments/apt_spr_3.jpg','content/photos/02-apartments/apt_spr_1.jpg']},
+        { id:'deluxe-kitchen', name:'Deluxe Kitchen', nameRu:'Делюкс с кухней', type:'deluxe', typeLabel:'Deluxe Apartment', typeLabelRu:'Делюкс Апартамент', floor:'2nd floor', floorRu:'2 этаж', view:'Garden & pool view', viewRu:'Вид на сад и бассейн', kitchen:true, area:'55 m²', maxGuests:4,
+          prices:[{min:1,max:6,perNight:105},{min:7,max:13,perNight:95},{min:14,max:27,perNight:75},{min:28,max:999,perMonth:2100}],
+          photos:['content/photos/01-hero/coworking_pool_view_hero.jpg','content/photos/04-deluxe/deluxe_living_pool_view.jpg','content/photos/02-apartments/apt_spr_4.jpg','content/photos/02-apartments/apt_spr_9.jpg']},
+        { id:'townhouse-front', name:'Townhouse Front', nameRu:'Таунхаус Фронт', type:'townhouse', typeLabel:'Townhouse', typeLabelRu:'Таунхаус', floor:'2 floors', floorRu:'2 этажа', view:'Rice terrace view', viewRu:'Вид на рисовые террасы', kitchen:true, area:'72 m²', maxGuests:4,
+          prices:[{min:1,max:6,perNight:100},{min:7,max:13,perNight:90},{min:14,max:27,perNight:72},{min:28,max:999,perMonth:2160}],
+          photos:['content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/1.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/2.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/3.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/4.jpeg','content/photos/03-townhouse/th_8_bedroom_rice.jpg']},
+        { id:'townhouse-mid', name:'Townhouse Mid', nameRu:'Таунхаус Мид', type:'townhouse', typeLabel:'Townhouse', typeLabelRu:'Таунхаус', floor:'2 floors', floorRu:'2 этажа', view:'Garden view', viewRu:'Вид на сад', kitchen:true, area:'72 m²', maxGuests:4,
+          prices:[{min:1,max:6,perNight:90},{min:7,max:13,perNight:81},{min:14,max:27,perNight:65},{min:28,max:999,perMonth:1944}],
+          photos:['content/photos/03-townhouse/th_3-3.jpeg','content/photos/03-townhouse/th_9.jpg','content/photos/03-townhouse/th_10.1.jpg','content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/9.jpg']},
+        { id:'townhouse-premium', name:'Townhouse Premium', nameRu:'Таунхаус Премиум', type:'townhouse', typeLabel:'Townhouse', typeLabelRu:'Таунхаус', floor:'2 floors', floorRu:'2 этажа', view:'Rice terrace panorama', viewRu:'Панорама рисовых террас', kitchen:true, area:'108 m²', maxGuests:6,
+          prices:[{min:1,max:6,perNight:130},{min:7,max:13,perNight:115},{min:14,max:27,perNight:95},{min:28,max:999,perMonth:2850}],
+          photos:['content/photos/03-townhouse/th_8_bedroom_rice.jpg','content/photos/03-townhouse/th_2.jpeg','content/photos/01-hero/townhouse_bedroom_rice_terrace.jpg','content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/2.jpeg','content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/4.jpeg']},
+    ];
+
+    // ===== LANGUAGE =====
+    let currentLang = 'en';
+    const translations = {
+        en: {
+            guests:['1 Adult','2 Adults','3 Adults','4 Adults','5 Adults','6 Adults'],
+            types:['Any','Apartment','Deluxe Apartment','Townhouse'],
+            perNight:'/ night', perMonth:'/ month', total:'Total:',
+            floor:'Floor', view:'View', kitchen:'Kitchen', area:'Area',
+            kitchenYes:'Full kitchen', kitchenNo:'No kitchen',
+            nights:'nights', night:'night', available:'rooms found',
+            bookMsg:"Hi! I'd like to book {room}, {dates}, {guests} guests{children}. Is it available?",
+            tierLabels:['1–6 nights','7–13 nights','14–27 nights','28+ nights (monthly)'],
+        },
+        ru: {
+            guests:['1 Гость','2 Гостя','3 Гостя','4 Гостя','5 Гостей','6 Гостей'],
+            types:['Любой','Апартамент','Делюкс Апартамент','Таунхаус'],
+            perNight:'/ ночь', perMonth:'/ месяц', total:'Итого:',
+            floor:'Этаж', view:'Вид', kitchen:'Кухня', area:'Площадь',
+            kitchenYes:'Полная кухня', kitchenNo:'Без кухни',
+            nights:'ночей', night:'ночь', available:'номеров найдено',
+            bookMsg:"Здравствуйте! Хочу забронировать {room}, {dates}, {guests} гостей{children}. Доступно?",
+            tierLabels:['1–6 ночей','7–13 ночей','14–27 ночей','28+ ночей (помесячно)'],
+        }
+    };
+
+    function toggleLang() {
+        currentLang = currentLang === 'en' ? 'ru' : 'en';
+        document.getElementById('langToggle').textContent = currentLang === 'en' ? 'RU' : 'EN';
+        document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.getAttribute(`data-${currentLang}`); });
+        updateSelectOptions();
+        if (!document.getElementById('results').classList.contains('hidden')) performSearch();
+    }
+    function updateSelectOptions() {
+        const t = translations[currentLang];
+        [...document.getElementById('guests').options].forEach((o,i) => { o.textContent = t.guests[i]; });
+        [...document.getElementById('propertyType').options].forEach((o,i) => { o.textContent = t.types[i]; });
+    }
+    document.getElementById('langToggle').addEventListener('click', toggleLang);
+
+    // ===== PRICING =====
+    function getSelectedDate(id) {
+        const el = document.getElementById(id);
+        return el._flatpickr ? el._flatpickr.selectedDates[0] : null;
+    }
+    function getNights(d1, d2) { return Math.max(1, Math.round((d2 - d1) / 864e5)); }
+    function getPrice(room, nights) {
+        const tier = room.prices.find(p => nights >= p.min && nights <= p.max);
+        if (!tier) return { perNight: room.prices[0].perNight, total: room.prices[0].perNight };
+        if (tier.perMonth) { return { perNight: Math.round(tier.perMonth/30), total: tier.perMonth * Math.ceil(nights/30), isMonthly:true, perMonth:tier.perMonth }; }
+        return { perNight: tier.perNight, total: tier.perNight * nights };
+    }
+
+    // ===== FLATPICKR =====
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+    const weekLater = new Date(); weekLater.setDate(weekLater.getDate()+8);
+
+    function syncDates(srcCI, srcCO) {
+        // Sync desktop <-> mobile
+        const allCI = document.querySelectorAll('#checkIn, #checkInMobile');
+        const allCO = document.querySelectorAll('#checkOut, #checkOutMobile');
+        allCI.forEach(el => { if(el._flatpickr && el !== srcCI) el._flatpickr.setDate(srcCI._flatpickr.selectedDates[0], false); });
+        allCO.forEach(el => { if(el._flatpickr && el !== srcCO) el._flatpickr.setDate(srcCO?._flatpickr?.selectedDates[0], false); });
+    }
+
+    const fpOpts = (id, isCheckOut) => ({
+        dateFormat:'d M Y',
+        minDate: isCheckOut ? weekLater : tomorrow,
+        defaultDate: isCheckOut ? weekLater : tomorrow,
+        monthSelectorType:'static',
+        disableMobile: true,
+        onChange(sel) {
+            if (!isCheckOut && sel[0]) {
+                const m = new Date(sel[0]); m.setDate(m.getDate()+1);
+                document.querySelectorAll('#checkOut, #checkOutMobile').forEach(el => {
+                    if (el._flatpickr) { el._flatpickr.set('minDate', m); if(el._flatpickr.selectedDates[0] && el._flatpickr.selectedDates[0] <= sel[0]) el._flatpickr.setDate(m); }
+                });
+                document.querySelectorAll('#checkIn, #checkInMobile').forEach(el => {
+                    if (el._flatpickr && el.id !== id) el._flatpickr.setDate(sel[0], false);
+                });
+            }
+            if (isCheckOut && sel[0]) {
+                document.querySelectorAll('#checkOut, #checkOutMobile').forEach(el => {
+                    if (el._flatpickr && el.id !== id) el._flatpickr.setDate(sel[0], false);
+                });
+            }
+        }
+    });
+
+    flatpickr('#checkIn', fpOpts('checkIn', false));
+    flatpickr('#checkOut', fpOpts('checkOut', true));
+    flatpickr('#checkInMobile', fpOpts('checkInMobile', false));
+    flatpickr('#checkOutMobile', fpOpts('checkOutMobile', true));
+
+    // Sync selects between desktop/mobile
+    function syncSelects() {
+        const pairs = [['guests','guestsMobile'],['children','childrenMobile'],['propertyType','propertyTypeMobile']];
+        pairs.forEach(([a,b]) => {
+            const elA = document.getElementById(a), elB = document.getElementById(b);
+            if(elA && elB) {
+                elA.addEventListener('change', () => { elB.value = elA.value; });
+                elB.addEventListener('change', () => { elA.value = elB.value; });
+            }
+        });
+    }
+    syncSelects();
+
+    // ===== NAVBAR SCROLL =====
+    let isResultsVisible = false;
+    window.addEventListener('scroll', () => {
+        const s = window.scrollY;
+        const nav = document.getElementById('navbar');
+        const wrapper = document.getElementById('bookingWrapper');
+        const shouldStick = isResultsVisible && s > window.innerHeight - 200;
+        nav.classList.toggle('scrolled', s > 80);
+        if (shouldStick) {
+            wrapper.classList.add('sticky');
+        } else {
+            wrapper.classList.remove('sticky');
+        }
+    });
+
+    // Mobile menu
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => { document.getElementById('mobileMenu').classList.remove('opacity-0','pointer-events-none'); });
+    document.getElementById('mobileMenuClose').addEventListener('click', () => { document.getElementById('mobileMenu').classList.add('opacity-0','pointer-events-none'); });
+
+    // ===== SEARCH =====
+    document.getElementById('searchBtn').addEventListener('click', performSearch);
+    document.getElementById('searchBtnMobile').addEventListener('click', performSearch);
+    function performSearch() {
+        const ciDate = getSelectedDate('checkIn'), coDate = getSelectedDate('checkOut');
+        if (!ciDate||!coDate) return;
+        const nights = getNights(ciDate, coDate), guests = parseInt(document.getElementById('guests').value), type = document.getElementById('propertyType').value;
+        const t = translations[currentLang];
+        let filtered = rooms.filter(r => r.maxGuests >= guests);
+        if (type !== 'any') filtered = filtered.filter(r => r.type === type);
+        filtered.sort((a,b) => getPrice(a,nights).perNight - getPrice(b,nights).perNight);
+
+        const resultsEl = document.getElementById('results');
+        resultsEl.classList.remove('hidden');
+        isResultsVisible = true;
+        const nightsLabel = currentLang==='ru' ? (nights===1?'ночь':'ночей') : (nights===1?'night':'nights');
+        const fmtOpts = {day:'numeric',month:'short'};
+        const ciShort = ciDate.toLocaleDateString('en-GB', fmtOpts);
+        const coShort = coDate.toLocaleDateString('en-GB', fmtOpts);
+        document.getElementById('resultCount').textContent = `${filtered.length} ${t.available} · ${nights} ${nightsLabel} · ${ciShort}–${coShort}`;
+
+        const grid = document.getElementById('roomGrid').querySelector('.grid');
+        grid.innerHTML = '';
+        const viewDetailsText = currentLang==='ru' ? 'ПОДРОБНЕЕ' : 'VIEW DETAILS';
+        filtered.forEach((room,i) => {
+            const price = getPrice(room,nights);
+            const name = currentLang==='ru' ? room.nameRu : room.name;
+            const typeLabel = currentLang==='ru' ? room.typeLabelRu : room.typeLabel;
+            const viewText = currentLang==='ru' ? room.viewRu : room.view;
+            const features = [room.area, viewText];
+            if (room.kitchen) features.push(t.kitchenYes);
+            const totalText = price.isMonthly
+                ? `${Math.ceil(nights/30)} ${currentLang==='ru'?'мес.':'mo.'} · $${price.total.toLocaleString()} ${currentLang==='ru'?'итого':'total'}`
+                : `${nights} ${nightsLabel} · $${price.total.toLocaleString()} ${currentLang==='ru'?'итого':'total'}`;
+            const card = document.createElement('div');
+            card.className = 'room-card fade-up';
+            card.style.transitionDelay = `${i*0.08}s`;
+            card.onclick = () => openModal(room,nights);
+            card.innerHTML = `
+                <div class="overflow-hidden"><img src="${room.photos[0]}" alt="${name}" loading="lazy"/></div>
+                <div class="p-5 pb-0">
+                    <p class="text-[11px] font-medium tracking-[0.1em] uppercase text-muted mb-2">${typeLabel}</p>
+                    <h3 class="text-[18px] font-semibold tracking-[0.02em] mb-1">${name}</h3>
+                    <p class="text-[12px] tracking-[0.08em] uppercase text-muted mb-3">${features.join(' · ')}</p>
+                    <div class="flex items-baseline justify-between mb-1">
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-[22px] font-bold">$${price.perNight}</span>
+                            <span class="text-[13px] text-muted font-normal">${price.isMonthly?t.perMonth:t.perNight}</span>
+                        </div>
+                    </div>
+                    <p class="text-[12px] text-muted mb-5">${totalText}</p>
+                </div>
+                <div class="card-cta">${viewDetailsText}</div>`;
+            grid.appendChild(card);
+        });
+        setTimeout(() => { resultsEl.scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(() => { document.querySelectorAll('.fade-up').forEach(el=>el.classList.add('visible')); },300); },100);
+    }
+
+    // ===== MODAL =====
+    let currentRoom=null, currentNights=0;
+    function openModal(room,nights) {
+        currentRoom=room; currentNights=nights;
+        const t=translations[currentLang], price=getPrice(room,nights), name=currentLang==='ru'?room.nameRu:room.name;
+        document.getElementById('modalTitle').textContent=name;
+        document.getElementById('modalMainImg').src=room.photos[0];
+        const thumbsEl=document.getElementById('modalThumbs'); thumbsEl.innerHTML='';
+        room.photos.forEach((p,i)=>{
+            const th=document.createElement('img'); th.src=p; th.alt=`${name} ${i+1}`; th.className=`gallery-thumb w-20 h-14 object-cover flex-shrink-0 ${i===0?'active':''}`;
+            th.onclick=()=>{document.getElementById('modalMainImg').src=p;thumbsEl.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active'));th.classList.add('active');};
+            thumbsEl.appendChild(th);
+        });
+        const floor=currentLang==='ru'?room.floorRu:room.floor, view=currentLang==='ru'?room.viewRu:room.view, kitchenText=room.kitchen?t.kitchenYes:t.kitchenNo;
+        document.getElementById('modalDetails').innerHTML=`
+            <div><p class="text-[11px] font-medium tracking-[0.1em] uppercase text-muted mb-1">${t.area}</p><p class="font-medium">${room.area}</p></div>
+            <div><p class="text-[11px] font-medium tracking-[0.1em] uppercase text-muted mb-1">${t.floor}</p><p class="font-medium">${floor}</p></div>
+            <div><p class="text-[11px] font-medium tracking-[0.1em] uppercase text-muted mb-1">${t.view}</p><p class="font-medium">${view}</p></div>
+            <div><p class="text-[11px] font-medium tracking-[0.1em] uppercase text-muted mb-1">${t.kitchen}</p><p class="font-medium">${kitchenText}</p></div>`;
+        document.getElementById('modalPrice').textContent=`$${price.perNight}`;
+        document.getElementById('modalTotalPrice').textContent=`$${price.total.toLocaleString()}`;
+        const ciD=getSelectedDate('checkIn'), coD=getSelectedDate('checkOut');
+        const ciFmt=ciD?ciD.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'', coFmt=coD?coD.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+        document.getElementById('modalDates').textContent=`${ciFmt} → ${coFmt} · ${nights} ${nights===1?t.night:t.nights}`;
+        const tiersEl=document.getElementById('modalTiers'); tiersEl.innerHTML='';
+        room.prices.forEach((tier,i)=>{
+            const label=t.tierLabels[i], priceText=tier.perMonth?`$${tier.perMonth.toLocaleString()} ${t.perMonth}`:`$${tier.perNight} ${t.perNight}`;
+            const isActive=nights>=tier.min&&nights<=tier.max;
+            tiersEl.innerHTML+=`<div class="flex justify-between ${isActive?'text-dark font-medium':''}"><span>${label}</span><span>${priceText}${isActive?' ←':''}</span></div>`;
+        });
+        document.getElementById('modal').classList.add('active');
+        document.body.style.overflow='hidden';
+    }
+    document.getElementById('modalClose').addEventListener('click',closeModal);
+    document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+    function closeModal(){document.getElementById('modal').classList.remove('active');document.body.style.overflow='';}
+
+    // ===== BOOK VIA MESSENGER =====
+    function bookVia(platform) {
+        if(!currentRoom)return;
+        const t=translations[currentLang], name=currentLang==='ru'?currentRoom.nameRu:currentRoom.name;
+        const ciD=getSelectedDate('checkIn'), coD=getSelectedDate('checkOut');
+        const ciFmt=ciD?ciD.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+        const coFmt=coD?coD.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+        const guests=document.getElementById('guests').value, children=document.getElementById('children').value;
+        const childText=parseInt(children)>0?(currentLang==='ru'?`, ${children} ребёнок`:`, ${children} child(ren)`):'';
+        const msg=t.bookMsg.replace('{room}',name).replace('{dates}',`${ciFmt} — ${coFmt}`).replace('{guests}',guests).replace('{children}',childText);
+        const enc=encodeURIComponent(msg);
+        if(platform==='telegram')window.open(`https://t.me/borntobe_complex?text=${enc}`,'_blank');
+        if(platform==='whatsapp')window.open(`https://wa.me/6281234567890?text=${enc}`,'_blank');
+        if(platform==='instagram')window.open(`https://ig.me/m/borntobe.complex`,'_blank');
+    }
+
+    // ===== FADE OBSERVER =====
+    const obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');});},{threshold:0.1});
+    document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+    new MutationObserver(()=>{document.querySelectorAll('.fade-up:not(.visible)').forEach(el=>obs.observe(el));}).observe(document.getElementById('roomGrid'),{childList:true,subtree:true});
+    </script>
+</body>
+</html>
