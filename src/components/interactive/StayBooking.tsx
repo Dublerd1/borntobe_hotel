@@ -49,6 +49,36 @@ export default function StayBooking({ lang, rooms }: Props) {
   const [children, setChildren] = useState(0)
   const [propertyType, setPropertyType] = useState('any')
 
+  // Highlight range between check-in and check-out on calendars
+  const highlightRange = useCallback((refs: React.RefObject<HTMLInputElement | null>[]) => {
+    // Determine which set of pickers to use
+    const isModal = refs.length > 0 && refs.some(r => r === modalCheckInRef || r === modalCheckOutRef)
+    const ciRefs = isModal ? [modalCheckInRef] : [checkInRef, checkInMobileRef]
+    const coRefs = isModal ? [modalCheckOutRef] : [checkOutRef, checkOutMobileRef]
+    const allRefs = refs.length ? refs : [checkInRef, checkOutRef, checkInMobileRef, checkOutMobileRef]
+
+    let ciDate: Date | null = null
+    let coDate: Date | null = null
+    ciRefs.forEach(ref => {
+      const fp = (ref.current as any)?._flatpickr
+      if (fp?.selectedDates[0]) ciDate = fp.selectedDates[0]
+    })
+    coRefs.forEach(ref => {
+      const fp = (ref.current as any)?._flatpickr
+      if (fp?.selectedDates[0]) coDate = fp.selectedDates[0]
+    })
+    allRefs.forEach(ref => {
+      const fp = (ref.current as any)?._flatpickr
+      if (!fp?.calendarContainer) return
+      fp.calendarContainer.querySelectorAll('.flatpickr-day').forEach((dayEl: HTMLElement) => {
+        const dayDate = (dayEl as any).dateObj as Date | undefined
+        if (!dayDate || !ciDate || !coDate) { dayEl.classList.remove('in-range-custom'); return }
+        const inRange = dayDate > ciDate && dayDate < coDate
+        dayEl.classList.toggle('in-range-custom', inRange)
+      })
+    })
+  }, [])
+
   // Init Flatpickr
   useEffect(() => {
     const loadFlatpickr = async () => {
@@ -58,33 +88,52 @@ export default function StayBooking({ lang, rooms }: Props) {
       const weekLater = new Date()
       weekLater.setDate(weekLater.getDate() + 8)
 
+      let justSelectedCheckIn = false
       const createOpts = (isCheckOut: boolean) => ({
         dateFormat: 'd M',
         minDate: isCheckOut ? weekLater : tomorrow,
         defaultDate: isCheckOut ? weekLater : tomorrow,
         monthSelectorType: 'static' as const,
         disableMobile: true,
+        onDayCreate(_dObj: any, _dStr: any, _fp: any, dayElem: HTMLElement) {
+          // Will be highlighted by highlightRange after onChange
+        },
+        onMonthChange() { setTimeout(() => highlightRange([]), 10) },
         onChange(selectedDates: Date[]) {
           if (!isCheckOut && selectedDates[0]) {
+            justSelectedCheckIn = true
             const minCO = new Date(selectedDates[0])
             minCO.setDate(minCO.getDate() + 1)
             ;[checkOutRef, checkOutMobileRef].forEach(ref => {
-              const fp = ref.current?._flatpickr
+              const fp = (ref.current as any)?._flatpickr
               if (fp) {
                 fp.set('minDate', minCO)
                 if (fp.selectedDates[0] && fp.selectedDates[0] <= selectedDates[0]) fp.setDate(minCO)
               }
             })
             ;[checkInRef, checkInMobileRef].forEach(ref => {
-              const fp = ref.current?._flatpickr
+              const fp = (ref.current as any)?._flatpickr
               if (fp && ref.current !== document.activeElement) fp.setDate(selectedDates[0], false)
             })
           }
           if (isCheckOut && selectedDates[0]) {
             ;[checkOutRef, checkOutMobileRef].forEach(ref => {
-              const fp = ref.current?._flatpickr
+              const fp = (ref.current as any)?._flatpickr
               if (fp && ref.current !== document.activeElement) fp.setDate(selectedDates[0], false)
             })
+          }
+          setTimeout(() => highlightRange([]), 10)
+        },
+        onClose() {
+          if (!isCheckOut && justSelectedCheckIn) {
+            justSelectedCheckIn = false
+            // Auto-open check-out after check-in closes (Airbnb pattern)
+            setTimeout(() => {
+              const isMobile = window.innerWidth < 768
+              const coRef = isMobile ? checkOutMobileRef : checkOutRef
+              const fp = (coRef.current as any)?._flatpickr
+              if (fp) fp.open()
+            }, 50)
           }
         },
       })
@@ -93,6 +142,8 @@ export default function StayBooking({ lang, rooms }: Props) {
       if (checkOutRef.current) flatpickr(checkOutRef.current, createOpts(true))
       if (checkInMobileRef.current) flatpickr(checkInMobileRef.current, createOpts(false))
       if (checkOutMobileRef.current) flatpickr(checkOutMobileRef.current, createOpts(true))
+      // Initial highlight
+      setTimeout(() => highlightRange([]), 100)
     }
     loadFlatpickr()
   }, [])
@@ -102,6 +153,7 @@ export default function StayBooking({ lang, rooms }: Props) {
     if (!modalRoom) return
     const initModalPickers = async () => {
       const flatpickr = (await import('flatpickr')).default
+      let modalJustSelectedCheckIn = false
       if (modalCheckInRef.current) {
         const existing = (modalCheckInRef.current as any)._flatpickr
         if (existing) existing.destroy()
@@ -111,8 +163,10 @@ export default function StayBooking({ lang, rooms }: Props) {
           minDate: new Date(),
           disableMobile: true,
           onReady(_: any, __: any, fp: any) { fp.calendarContainer?.classList.add('flatpickr-light') },
+          onMonthChange() { setTimeout(() => highlightRange([modalCheckInRef, modalCheckOutRef]), 10) },
           onChange(selectedDates: Date[]) {
             if (selectedDates[0]) {
+              modalJustSelectedCheckIn = true
               setModalCheckIn(selectedDates[0])
               const minCO = new Date(selectedDates[0])
               minCO.setDate(minCO.getDate() + 1)
@@ -124,6 +178,16 @@ export default function StayBooking({ lang, rooms }: Props) {
                   setModalCheckOut(minCO)
                 }
               }
+            }
+            setTimeout(() => highlightRange([modalCheckInRef, modalCheckOutRef]), 10)
+          },
+          onClose() {
+            if (modalJustSelectedCheckIn) {
+              modalJustSelectedCheckIn = false
+              setTimeout(() => {
+                const coFp = (modalCheckOutRef.current as any)?._flatpickr
+                if (coFp) coFp.open()
+              }, 50)
             }
           },
         })
@@ -138,8 +202,10 @@ export default function StayBooking({ lang, rooms }: Props) {
           minDate: minCO,
           disableMobile: true,
           onReady(_: any, __: any, fp: any) { fp.calendarContainer?.classList.add('flatpickr-light') },
+          onMonthChange() { setTimeout(() => highlightRange([modalCheckInRef, modalCheckOutRef]), 10) },
           onChange(selectedDates: Date[]) {
             if (selectedDates[0]) setModalCheckOut(selectedDates[0])
+            setTimeout(() => highlightRange([modalCheckInRef, modalCheckOutRef]), 10)
           },
         })
       }

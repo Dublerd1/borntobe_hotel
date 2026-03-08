@@ -116,6 +116,7 @@ span.flatpickr-weekday {
   color: rgba(255,255,255,0.85) !important;
   height: 40px !important;
   line-height: 40px !important;
+  max-width: none !important;
   border-color: transparent !important;
 }
 .flatpickr-day:hover {
@@ -131,9 +132,9 @@ span.flatpickr-weekday {
   font-weight: 600 !important;
 }
 .flatpickr-day.inRange {
-  background: rgba(200,150,90,0.15) !important;
+  background: rgba(200,150,90,0.13) !important;
   border-color: transparent !important;
-  box-shadow: -5px 0 0 rgba(200,150,90,0.15), 5px 0 0 rgba(200,150,90,0.15) !important;
+  box-shadow: none !important;
   color: var(--color-cream) !important;
 }
 .flatpickr-day.today {
@@ -163,6 +164,13 @@ span.flatpickr-weekday {
 }
 .flatpickr-rContainer {
   background: transparent !important;
+}
+/* Custom range highlight — dark theme */
+.flatpickr-day.in-range-custom {
+  background: rgba(200,150,90,0.13) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--color-cream) !important;
 }
 .flatpickr-input { cursor: pointer !important; }
 
@@ -205,6 +213,7 @@ span.flatpickr-weekday {
 }
 .flatpickr-light .flatpickr-day {
   color: #141414 !important;
+  max-width: none !important;
 }
 .flatpickr-light .flatpickr-day:hover {
   background: #EDEAE6 !important;
@@ -234,6 +243,13 @@ span.flatpickr-weekday {
 .flatpickr-light .flatpickr-innerContainer,
 .flatpickr-light .flatpickr-rContainer {
   background: transparent !important;
+}
+/* Custom range highlight — light theme */
+.flatpickr-light .flatpickr-day.in-range-custom {
+  background: rgba(200,150,90,0.12) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: #141414 !important;
 }
 
 /* ===== Navbar ===== */
