@@ -172,6 +172,20 @@ span.flatpickr-weekday {
   box-shadow: none !important;
   color: var(--color-cream) !important;
 }
+/* Calendar phase indicator (CHECK-IN → CHECK-OUT animation) */
+.calendar-phase-indicator {
+  text-align: center;
+  padding: 10px 12px 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  transition: all 0.3s ease;
+}
+.calendar-phase-indicator.phase-checkout {
+  color: var(--color-gold);
+}
 .flatpickr-input { cursor: pointer !important; }
 
 /* ===== Flatpickr Light — for modal context ===== */
@@ -243,6 +257,13 @@ span.flatpickr-weekday {
 .flatpickr-light .flatpickr-innerContainer,
 .flatpickr-light .flatpickr-rContainer {
   background: transparent !important;
+}
+/* Phase indicator — light theme */
+.flatpickr-light .calendar-phase-indicator {
+  color: #5C5C5C;
+}
+.flatpickr-light .calendar-phase-indicator.phase-checkout {
+  color: var(--color-gold);
 }
 /* Custom range highlight — light theme */
 .flatpickr-light .flatpickr-day.in-range-custom {

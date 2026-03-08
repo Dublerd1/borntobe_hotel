@@ -49,65 +49,7 @@ export default function StayBooking({ lang, rooms }: Props) {
   const [children, setChildren] = useState(0)
   const [propertyType, setPropertyType] = useState('any')
 
-  // Highlight range between check-in and check-out (or hovered date) on calendars
-  const highlightRange = useCallback((
-    refs: React.RefObject<HTMLInputElement | null>[],
-    hoverDate?: Date | null
-  ) => {
-    const isModal = refs.length > 0 && refs.some(r => r === modalCheckInRef || r === modalCheckOutRef)
-    const ciRefs = isModal ? [modalCheckInRef] : [checkInRef, checkInMobileRef]
-    const coRefs = isModal ? [modalCheckOutRef] : [checkOutRef, checkOutMobileRef]
-    const allRefs = refs.length ? refs : [checkInRef, checkOutRef, checkInMobileRef, checkOutMobileRef]
-
-    let ciDate: Date | null = null
-    let coDate: Date | null = null
-    ciRefs.forEach(ref => {
-      const fp = (ref.current as any)?._flatpickr
-      if (fp?.selectedDates[0]) ciDate = fp.selectedDates[0]
-    })
-    coRefs.forEach(ref => {
-      const fp = (ref.current as any)?._flatpickr
-      if (fp?.selectedDates[0]) coDate = fp.selectedDates[0]
-    })
-    // If hovering, use hover date as end of range
-    const endDate = hoverDate ?? coDate
-    allRefs.forEach(ref => {
-      const fp = (ref.current as any)?._flatpickr
-      if (!fp?.calendarContainer) return
-      fp.calendarContainer.querySelectorAll('.flatpickr-day').forEach((dayEl: HTMLElement) => {
-        const dayDate = (dayEl as any).dateObj as Date | undefined
-        if (!dayDate || !ciDate || !endDate) { dayEl.classList.remove('in-range-custom'); return }
-        const inRange = dayDate > ciDate && dayDate < endDate
-        dayEl.classList.toggle('in-range-custom', inRange)
-      })
-    })
-  }, [])
-
-  // Attach hover listeners to a flatpickr calendar for range preview
-  const attachHoverListeners = useCallback((fp: any, ciRefs: React.RefObject<HTMLInputElement | null>[], targetRefs: React.RefObject<HTMLInputElement | null>[]) => {
-    if (!fp?.calendarContainer) return
-    fp.calendarContainer.addEventListener('mouseover', (e: MouseEvent) => {
-      const dayEl = (e.target as HTMLElement).closest('.flatpickr-day') as HTMLElement | null
-      if (!dayEl) return
-      const hoverDate = (dayEl as any).dateObj as Date | undefined
-      if (!hoverDate) return
-      // Only show hover trail if we have a check-in date
-      let ciDate: Date | null = null
-      ciRefs.forEach(ref => {
-        const fpCI = (ref.current as any)?._flatpickr
-        if (fpCI?.selectedDates[0]) ciDate = fpCI.selectedDates[0]
-      })
-      if (ciDate && hoverDate > ciDate) {
-        highlightRange(targetRefs, hoverDate)
-      }
-    })
-    fp.calendarContainer.addEventListener('mouseleave', () => {
-      // Restore to selected range
-      highlightRange(targetRefs)
-    })
-  }, [highlightRange])
-
-  // Init Flatpickr
+  // Init Flatpickr — single calendar per viewport with range mode (Airbnb pattern)
   useEffect(() => {
     const loadFlatpickr = async () => {
       const flatpickr = (await import('flatpickr')).default
@@ -116,141 +58,183 @@ export default function StayBooking({ lang, rooms }: Props) {
       const weekLater = new Date()
       weekLater.setDate(weekLater.getDate() + 8)
 
-      let justSelectedCheckIn = false
-      const createOpts = (isCheckOut: boolean) => ({
+      // Fix input values: range mode shows "date1 to date2" in one input,
+      // we split it into separate check-in / check-out inputs
+      const fixInputValues = (
+        fp: any,
+        ciRef: React.RefObject<HTMLInputElement | null>,
+        coRef: React.RefObject<HTMLInputElement | null>,
+        ciRefSync: React.RefObject<HTMLInputElement | null>,
+        coRefSync: React.RefObject<HTMLInputElement | null>
+      ) => {
+        const dates = fp.selectedDates
+        if (dates.length >= 1) {
+          const ciFmt = fp.formatDate(dates[0], 'd M')
+          if (ciRef.current) ciRef.current.value = ciFmt
+          if (ciRefSync.current) ciRefSync.current.value = ciFmt
+        }
+        if (dates.length === 2) {
+          const coFmt = fp.formatDate(dates[1], 'd M')
+          if (coRef.current) coRef.current.value = coFmt
+          if (coRefSync.current) coRefSync.current.value = coFmt
+        } else {
+          if (coRef.current) coRef.current.value = ''
+          if (coRefSync.current) coRefSync.current.value = ''
+        }
+      }
+
+      const createRangeOpts = (
+        ciRef: React.RefObject<HTMLInputElement | null>,
+        coRef: React.RefObject<HTMLInputElement | null>,
+        ciRefSync: React.RefObject<HTMLInputElement | null>,
+        coRefSync: React.RefObject<HTMLInputElement | null>
+      ) => ({
+        mode: 'range' as const,
         dateFormat: 'd M',
-        minDate: isCheckOut ? weekLater : tomorrow,
-        defaultDate: isCheckOut ? weekLater : tomorrow,
+        minDate: tomorrow,
+        defaultDate: [tomorrow, weekLater] as Date[],
         monthSelectorType: 'static' as const,
         disableMobile: true,
-        onDayCreate(_dObj: any, _dStr: any, _fp: any, dayElem: HTMLElement) {
-          // Will be highlighted by highlightRange after onChange
+        onReady(_dObj: any, _dStr: any, fp: any) {
+          // Phase indicator inside calendar
+          const indicator = document.createElement('div')
+          indicator.className = 'calendar-phase-indicator'
+          indicator.textContent = t.booking.checkIn
+          fp.calendarContainer.insertBefore(indicator, fp.calendarContainer.firstChild)
+          setTimeout(() => fixInputValues(fp, ciRef, coRef, ciRefSync, coRefSync), 0)
         },
-        onMonthChange() { setTimeout(() => highlightRange([]), 10) },
-        onChange(selectedDates: Date[]) {
-          if (!isCheckOut && selectedDates[0]) {
-            justSelectedCheckIn = true
-            const minCO = new Date(selectedDates[0])
-            minCO.setDate(minCO.getDate() + 1)
-            ;[checkOutRef, checkOutMobileRef].forEach(ref => {
-              const fp = (ref.current as any)?._flatpickr
-              if (fp) {
-                fp.set('minDate', minCO)
-                if (fp.selectedDates[0] && fp.selectedDates[0] <= selectedDates[0]) fp.setDate(minCO)
-              }
-            })
-            ;[checkInRef, checkInMobileRef].forEach(ref => {
-              const fp = (ref.current as any)?._flatpickr
-              if (fp && ref.current !== document.activeElement) fp.setDate(selectedDates[0], false)
-            })
+        onChange(selectedDates: Date[], _: string, fp: any) {
+          const indicator = fp.calendarContainer.querySelector('.calendar-phase-indicator')
+          if (selectedDates.length === 1 && indicator) {
+            indicator.textContent = t.booking.checkOut
+            indicator.classList.add('phase-checkout')
+          } else if (selectedDates.length === 2) {
+            if (indicator) {
+              indicator.textContent = t.booking.checkIn
+              indicator.classList.remove('phase-checkout')
+            }
+            // Sync to other viewport's flatpickr
+            const syncFp = (ciRefSync.current as any)?._flatpickr
+            if (syncFp && syncFp !== fp) {
+              syncFp.setDate([selectedDates[0], selectedDates[1]], false)
+              setTimeout(() => fixInputValues(syncFp, ciRefSync, coRefSync, ciRef, coRef), 0)
+            }
           }
-          if (isCheckOut && selectedDates[0]) {
-            ;[checkOutRef, checkOutMobileRef].forEach(ref => {
-              const fp = (ref.current as any)?._flatpickr
-              if (fp && ref.current !== document.activeElement) fp.setDate(selectedDates[0], false)
-            })
-          }
-          setTimeout(() => highlightRange([]), 10)
+          setTimeout(() => fixInputValues(fp, ciRef, coRef, ciRefSync, coRefSync), 0)
         },
-        onClose() {
-          if (!isCheckOut && justSelectedCheckIn) {
-            justSelectedCheckIn = false
-            // Auto-open check-out after check-in closes (Airbnb pattern)
-            setTimeout(() => {
-              const isMobile = window.innerWidth < 768
-              const coRef = isMobile ? checkOutMobileRef : checkOutRef
-              const fp = (coRef.current as any)?._flatpickr
-              if (fp) fp.open()
-            }, 50)
+        onOpen(_: any, __: any, fp: any) {
+          const indicator = fp.calendarContainer.querySelector('.calendar-phase-indicator')
+          if (indicator) {
+            const isCheckout = fp.selectedDates.length === 1
+            indicator.textContent = isCheckout ? t.booking.checkOut : t.booking.checkIn
+            indicator.classList.toggle('phase-checkout', isCheckout)
           }
+        },
+        onMonthChange(_: any, __: any, fp: any) {
+          setTimeout(() => fixInputValues(fp, ciRef, coRef, ciRefSync, coRefSync), 0)
         },
       })
 
-      if (checkInRef.current) flatpickr(checkInRef.current, createOpts(false))
-      if (checkOutRef.current) flatpickr(checkOutRef.current, createOpts(true))
-      if (checkInMobileRef.current) flatpickr(checkInMobileRef.current, createOpts(false))
-      if (checkOutMobileRef.current) flatpickr(checkOutMobileRef.current, createOpts(true))
-      // Attach hover trail listeners — only on check-out calendars
-      const heroCIRefs = [checkInRef, checkInMobileRef]
-      ;[checkOutRef, checkOutMobileRef].forEach(ref => {
-        const fp = (ref.current as any)?._flatpickr
-        if (fp) attachHoverListeners(fp, heroCIRefs, [])
+      if (checkInRef.current) {
+        flatpickr(checkInRef.current, createRangeOpts(checkInRef, checkOutRef, checkInMobileRef, checkOutMobileRef))
+      }
+      if (checkInMobileRef.current) {
+        flatpickr(checkInMobileRef.current, createRangeOpts(checkInMobileRef, checkOutMobileRef, checkInRef, checkOutRef))
+      }
+
+      // Check-out inputs: open the check-in calendar on click
+      checkOutRef.current?.addEventListener('click', () => {
+        (checkInRef.current as any)?._flatpickr?.open()
       })
-      // Initial highlight
-      setTimeout(() => highlightRange([]), 100)
+      checkOutMobileRef.current?.addEventListener('click', () => {
+        (checkInMobileRef.current as any)?._flatpickr?.open()
+      })
     }
     loadFlatpickr()
   }, [])
 
-  // Init Flatpickr in modal when it opens
+  // Init Flatpickr in modal — single range calendar (same pattern as hero)
   useEffect(() => {
     if (!modalRoom) return
-    const initModalPickers = async () => {
+    const initModalPicker = async () => {
       const flatpickr = (await import('flatpickr')).default
-      let modalJustSelectedCheckIn = false
-      if (modalCheckInRef.current) {
-        const existing = (modalCheckInRef.current as any)._flatpickr
-        if (existing) existing.destroy()
-        flatpickr(modalCheckInRef.current, {
-          dateFormat: 'd M',
-          defaultDate: modalCheckIn ?? undefined,
-          minDate: new Date(),
-          disableMobile: true,
-          onReady(_: any, __: any, fp: any) { fp.calendarContainer?.classList.add('flatpickr-light') },
-          onMonthChange() { setTimeout(() => highlightRange([modalCheckInRef, modalCheckOutRef]), 10) },
-          onChange(selectedDates: Date[]) {
-            if (selectedDates[0]) {
-              modalJustSelectedCheckIn = true
-              setModalCheckIn(selectedDates[0])
-              const minCO = new Date(selectedDates[0])
-              minCO.setDate(minCO.getDate() + 1)
-              const coFp = (modalCheckOutRef.current as any)?._flatpickr
-              if (coFp) {
-                coFp.set('minDate', minCO)
-                if (coFp.selectedDates[0] && coFp.selectedDates[0] <= selectedDates[0]) {
-                  coFp.setDate(minCO)
-                  setModalCheckOut(minCO)
-                }
-              }
+      // Destroy old instances
+      const existingCI = (modalCheckInRef.current as any)?._flatpickr
+      if (existingCI) existingCI.destroy()
+      const existingCO = (modalCheckOutRef.current as any)?._flatpickr
+      if (existingCO) existingCO.destroy()
+
+      if (!modalCheckInRef.current) return
+      const defaults: Date[] = []
+      if (modalCheckIn) defaults.push(modalCheckIn)
+      if (modalCheckIn && modalCheckOut) defaults.push(modalCheckOut)
+
+      flatpickr(modalCheckInRef.current, {
+        mode: 'range' as any,
+        dateFormat: 'd M',
+        defaultDate: defaults.length ? defaults : undefined,
+        minDate: new Date(),
+        disableMobile: true,
+        onReady(_: any, __: any, fp: any) {
+          fp.calendarContainer?.classList.add('flatpickr-light')
+          // Phase indicator
+          const indicator = document.createElement('div')
+          indicator.className = 'calendar-phase-indicator'
+          indicator.textContent = t.booking.checkIn
+          fp.calendarContainer.insertBefore(indicator, fp.calendarContainer.firstChild)
+          // Fix input values
+          setTimeout(() => {
+            if (fp.selectedDates.length >= 1 && modalCheckInRef.current) {
+              modalCheckInRef.current.value = fp.formatDate(fp.selectedDates[0], 'd M')
             }
-            setTimeout(() => highlightRange([modalCheckInRef, modalCheckOutRef]), 10)
-          },
-          onClose() {
-            if (modalJustSelectedCheckIn) {
-              modalJustSelectedCheckIn = false
-              setTimeout(() => {
-                const coFp = (modalCheckOutRef.current as any)?._flatpickr
-                if (coFp) coFp.open()
-              }, 50)
+            if (fp.selectedDates.length === 2 && modalCheckOutRef.current) {
+              modalCheckOutRef.current.value = fp.formatDate(fp.selectedDates[1], 'd M')
             }
-          },
-        })
-      }
-      if (modalCheckOutRef.current) {
-        const existing = (modalCheckOutRef.current as any)._flatpickr
-        if (existing) existing.destroy()
-        const minCO = modalCheckIn ? new Date(modalCheckIn.getTime() + 86400000) : new Date(Date.now() + 86400000)
-        flatpickr(modalCheckOutRef.current, {
-          dateFormat: 'd M',
-          defaultDate: modalCheckOut ?? undefined,
-          minDate: minCO,
-          disableMobile: true,
-          onReady(_: any, __: any, fp: any) { fp.calendarContainer?.classList.add('flatpickr-light') },
-          onMonthChange() { setTimeout(() => highlightRange([modalCheckInRef, modalCheckOutRef]), 10) },
-          onChange(selectedDates: Date[]) {
-            if (selectedDates[0]) setModalCheckOut(selectedDates[0])
-            setTimeout(() => highlightRange([modalCheckInRef, modalCheckOutRef]), 10)
-          },
-        })
-      }
-      // Attach hover trail listeners — only on modal check-out calendar
-      const modalCIRefs = [modalCheckInRef]
-      const modalTargetRefs = [modalCheckInRef, modalCheckOutRef]
-      const coFp = (modalCheckOutRef.current as any)?._flatpickr
-      if (coFp) attachHoverListeners(coFp, modalCIRefs, modalTargetRefs)
+          }, 0)
+        },
+        onChange(selectedDates: Date[], _: string, fp: any) {
+          const indicator = fp.calendarContainer.querySelector('.calendar-phase-indicator')
+          if (selectedDates.length === 1) {
+            setModalCheckIn(selectedDates[0])
+            if (indicator) {
+              indicator.textContent = t.booking.checkOut
+              indicator.classList.add('phase-checkout')
+            }
+            if (modalCheckOutRef.current) modalCheckOutRef.current.value = ''
+          } else if (selectedDates.length === 2) {
+            setModalCheckIn(selectedDates[0])
+            setModalCheckOut(selectedDates[1])
+            if (indicator) {
+              indicator.textContent = t.booking.checkIn
+              indicator.classList.remove('phase-checkout')
+            }
+          }
+          // Fix check-in input value (override range "date1 to date2")
+          setTimeout(() => {
+            if (selectedDates.length >= 1 && modalCheckInRef.current) {
+              modalCheckInRef.current.value = fp.formatDate(selectedDates[0], 'd M')
+            }
+            if (selectedDates.length === 2 && modalCheckOutRef.current) {
+              modalCheckOutRef.current.value = fp.formatDate(selectedDates[1], 'd M')
+            }
+          }, 0)
+        },
+        onOpen(_: any, __: any, fp: any) {
+          const indicator = fp.calendarContainer.querySelector('.calendar-phase-indicator')
+          if (indicator) {
+            const isCheckout = fp.selectedDates.length === 1
+            indicator.textContent = isCheckout ? t.booking.checkOut : t.booking.checkIn
+            indicator.classList.toggle('phase-checkout', isCheckout)
+          }
+        },
+      })
+
+      // Check-out input: open the same range calendar on click
+      modalCheckOutRef.current?.addEventListener('click', () => {
+        (modalCheckInRef.current as any)?._flatpickr?.open()
+      })
     }
-    // Small delay to ensure DOM is ready
-    const timer = setTimeout(initModalPickers, 50)
+    const timer = setTimeout(initModalPicker, 50)
     return () => clearTimeout(timer)
   }, [modalRoom])
 
@@ -269,8 +253,9 @@ export default function StayBooking({ lang, rooms }: Props) {
 
   // Search
   const handleSearch = useCallback(() => {
-    const ci = checkInRef.current?._flatpickr?.selectedDates[0] ?? checkInMobileRef.current?._flatpickr?.selectedDates[0]
-    const co = checkOutRef.current?._flatpickr?.selectedDates[0] ?? checkOutMobileRef.current?._flatpickr?.selectedDates[0]
+    const fp = (checkInRef.current as any)?._flatpickr ?? (checkInMobileRef.current as any)?._flatpickr
+    const ci = fp?.selectedDates?.[0]
+    const co = fp?.selectedDates?.[1]
     if (!ci || !co) return
     setSearchParams({ checkIn: ci, checkOut: co, guests, children, propertyType })
   }, [guests, children, propertyType])
@@ -841,8 +826,13 @@ declare global {
   interface HTMLInputElement {
     _flatpickr?: {
       selectedDates: Date[]
-      setDate: (date: Date, triggerChange?: boolean) => void
+      setDate: (date: Date | Date[], triggerChange?: boolean) => void
       set: (key: string, value: unknown) => void
+      open: () => void
+      close: () => void
+      formatDate: (date: Date, format: string) => string
+      calendarContainer: HTMLElement
+      destroy: () => void
     }
   }
 }
