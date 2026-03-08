@@ -1,0 +1,275 @@
+export interface PriceTier {
+  min: number
+  max: number
+  perNight?: number
+  perMonth?: number
+}
+
+export interface Room {
+  id: string
+  name: string
+  nameRu: string
+  type: 'apartment' | 'deluxe' | 'townhouse'
+  typeLabel: string
+  typeLabelRu: string
+  floor: string
+  floorRu: string
+  view: string
+  viewRu: string
+  kitchen: boolean
+  area: string
+  maxGuests: number
+  prices: PriceTier[]
+  photos: string[]
+}
+
+export const rooms: Room[] = [
+  {
+    id: 'standard',
+    name: 'Standard',
+    nameRu: 'Стандарт',
+    type: 'apartment',
+    typeLabel: 'Apartment',
+    typeLabelRu: 'Апартамент',
+    floor: '2nd floor',
+    floorRu: '2 этаж',
+    view: 'Garden view',
+    viewRu: 'Вид на сад',
+    kitchen: false,
+    area: '38 m²',
+    maxGuests: 2,
+    prices: [
+      { min: 1, max: 6, perNight: 65 },
+      { min: 7, max: 13, perNight: 55 },
+      { min: 14, max: 27, perNight: 50 },
+      { min: 28, max: 999, perMonth: 1200 },
+    ],
+    photos: [
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/1.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/2.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/3.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/4.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/5.jpeg',
+    ],
+  },
+  {
+    id: 'panorama',
+    name: 'Panorama View',
+    nameRu: 'Панорамный вид',
+    type: 'apartment',
+    typeLabel: 'Apartment',
+    typeLabelRu: 'Апартамент',
+    floor: '3rd floor',
+    floorRu: '3 этаж',
+    view: 'Panoramic view',
+    viewRu: 'Панорамный вид',
+    kitchen: false,
+    area: '38 m²',
+    maxGuests: 2,
+    prices: [
+      { min: 1, max: 6, perNight: 70 },
+      { min: 7, max: 13, perNight: 60 },
+      { min: 14, max: 27, perNight: 55 },
+      { min: 28, max: 999, perMonth: 1300 },
+    ],
+    photos: [
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/6.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/7.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/8.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/9.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Apartment S,P,R/10.jpeg',
+    ],
+  },
+  {
+    id: 'rice-terrace',
+    name: 'Rice Terrace',
+    nameRu: 'Рисовые Террасы',
+    type: 'apartment',
+    typeLabel: 'Apartment',
+    typeLabelRu: 'Апартамент',
+    floor: '4th floor',
+    floorRu: '4 этаж',
+    view: 'Rice terrace view',
+    viewRu: 'Вид на рисовые террасы',
+    kitchen: false,
+    area: '38 m²',
+    maxGuests: 2,
+    prices: [
+      { min: 1, max: 6, perNight: 75 },
+      { min: 7, max: 13, perNight: 65 },
+      { min: 14, max: 27, perNight: 60 },
+      { min: 28, max: 999, perMonth: 1400 },
+    ],
+    photos: [
+      'content/photos/01-hero/apt_spr_balcony_rice_terrace.jpg',
+      'content/photos/02-apartments/apt_spr_1.jpg',
+      'content/photos/02-apartments/apt_spr_2.jpg',
+      'content/photos/02-apartments/apt_spr_3.jpg',
+      'content/photos/02-apartments/apt_spr_4.jpg',
+    ],
+  },
+  {
+    id: 'deluxe',
+    name: 'Deluxe',
+    nameRu: 'Делюкс',
+    type: 'deluxe',
+    typeLabel: 'Deluxe Apartment',
+    typeLabelRu: 'Делюкс Апартамент',
+    floor: '2nd–3rd floor',
+    floorRu: '2–3 этаж',
+    view: 'Pool & garden view',
+    viewRu: 'Вид на бассейн и сад',
+    kitchen: false,
+    area: '45 m²',
+    maxGuests: 3,
+    prices: [
+      { min: 1, max: 6, perNight: 75 },
+      { min: 7, max: 13, perNight: 65 },
+      { min: 14, max: 27, perNight: 55 },
+      { min: 28, max: 999, perMonth: 1500 },
+    ],
+    photos: [
+      'content/photos/04-deluxe/deluxe_living_pool_view.jpg',
+      'content/photos/04-deluxe/ig_room_wide_angle.jpg',
+      'content/photos/04-deluxe/ig_bedroom_ambient_lighting.jpg',
+      'content/photos/04-deluxe/ig_room_entry_glass_block.jpg',
+    ],
+  },
+  {
+    id: 'deluxe-plus',
+    name: 'Deluxe Plus',
+    nameRu: 'Делюкс Плюс',
+    type: 'deluxe',
+    typeLabel: 'Deluxe Apartment',
+    typeLabelRu: 'Делюкс Апартамент',
+    floor: '3rd–4th floor',
+    floorRu: '3–4 этаж',
+    view: 'Rice terrace & pool',
+    viewRu: 'Вид на террасы и бассейн',
+    kitchen: false,
+    area: '50 m²',
+    maxGuests: 3,
+    prices: [
+      { min: 1, max: 6, perNight: 80 },
+      { min: 7, max: 13, perNight: 75 },
+      { min: 14, max: 27, perNight: 60 },
+      { min: 28, max: 999, perMonth: 1650 },
+    ],
+    photos: [
+      'content/photos/02-apartments/apt_spr_2.jpg',
+      'content/photos/02-apartments/apt_spr_4.jpg',
+      'content/photos/02-apartments/apt_spr_3.jpg',
+      'content/photos/02-apartments/apt_spr_1.jpg',
+    ],
+  },
+  {
+    id: 'deluxe-kitchen',
+    name: 'Deluxe Kitchen',
+    nameRu: 'Делюкс с кухней',
+    type: 'deluxe',
+    typeLabel: 'Deluxe Apartment',
+    typeLabelRu: 'Делюкс Апартамент',
+    floor: '2nd floor',
+    floorRu: '2 этаж',
+    view: 'Garden & pool view',
+    viewRu: 'Вид на сад и бассейн',
+    kitchen: true,
+    area: '55 m²',
+    maxGuests: 4,
+    prices: [
+      { min: 1, max: 6, perNight: 105 },
+      { min: 7, max: 13, perNight: 95 },
+      { min: 14, max: 27, perNight: 75 },
+      { min: 28, max: 999, perMonth: 2100 },
+    ],
+    photos: [
+      'content/photos/01-hero/coworking_pool_view_hero.jpg',
+      'content/photos/04-deluxe/deluxe_living_pool_view.jpg',
+      'content/photos/02-apartments/apt_spr_4.jpg',
+      'content/photos/02-apartments/apt_spr_9.jpg',
+    ],
+  },
+  {
+    id: 'townhouse-front',
+    name: 'Townhouse Front',
+    nameRu: 'Таунхаус Фронт',
+    type: 'townhouse',
+    typeLabel: 'Townhouse',
+    typeLabelRu: 'Таунхаус',
+    floor: '2 floors',
+    floorRu: '2 этажа',
+    view: 'Rice terrace view',
+    viewRu: 'Вид на рисовые террасы',
+    kitchen: true,
+    area: '72 m²',
+    maxGuests: 4,
+    prices: [
+      { min: 1, max: 6, perNight: 100 },
+      { min: 7, max: 13, perNight: 90 },
+      { min: 14, max: 27, perNight: 72 },
+      { min: 28, max: 999, perMonth: 2160 },
+    ],
+    photos: [
+      'content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/1.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/2.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/3.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/4.jpeg',
+      'content/photos/03-townhouse/th_8_bedroom_rice.jpg',
+    ],
+  },
+  {
+    id: 'townhouse-mid',
+    name: 'Townhouse Mid',
+    nameRu: 'Таунхаус Мид',
+    type: 'townhouse',
+    typeLabel: 'Townhouse',
+    typeLabelRu: 'Таунхаус',
+    floor: '2 floors',
+    floorRu: '2 этажа',
+    view: 'Garden view',
+    viewRu: 'Вид на сад',
+    kitchen: true,
+    area: '72 m²',
+    maxGuests: 4,
+    prices: [
+      { min: 1, max: 6, perNight: 90 },
+      { min: 7, max: 13, perNight: 81 },
+      { min: 14, max: 27, perNight: 65 },
+      { min: 28, max: 999, perMonth: 1944 },
+    ],
+    photos: [
+      'content/photos/03-townhouse/th_3-3.jpeg',
+      'content/photos/03-townhouse/th_9.jpg',
+      'content/photos/03-townhouse/th_10.1.jpg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/9.jpg',
+    ],
+  },
+  {
+    id: 'townhouse-premium',
+    name: 'Townhouse Premium',
+    nameRu: 'Таунхаус Премиум',
+    type: 'townhouse',
+    typeLabel: 'Townhouse',
+    typeLabelRu: 'Таунхаус',
+    floor: '2 floors',
+    floorRu: '2 этажа',
+    view: 'Rice terrace panorama',
+    viewRu: 'Панорама рисовых террас',
+    kitchen: true,
+    area: '108 m²',
+    maxGuests: 6,
+    prices: [
+      { min: 1, max: 6, perNight: 130 },
+      { min: 7, max: 13, perNight: 115 },
+      { min: 14, max: 27, perNight: 95 },
+      { min: 28, max: 999, perMonth: 2850 },
+    ],
+    photos: [
+      'content/photos/03-townhouse/th_8_bedroom_rice.jpg',
+      'content/photos/03-townhouse/th_2.jpeg',
+      'content/photos/01-hero/townhouse_bedroom_rice_terrace.jpg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/2.jpeg',
+      'content/photos/PHOTO BORN TO BE COMPLEX/Townhouse 1,2 line/4.jpeg',
+    ],
+  },
+]

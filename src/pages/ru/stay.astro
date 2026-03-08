@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import StayBooking from '@components/interactive/StayBooking'
+import { rooms } from '@data/rooms'
+
+const lang = 'ru'
+---
+
+<BaseLayout
+  title="Номера | Born To Be Complex — Бутик-апартаменты Перереnan Бали"
+  description="Апартаменты с бассейном, кафе, комьюнити в Перереnan. 9 типов от $55/ночь."
+  lang={lang}
+  canonical="https://borntobecomplex.com/ru/stay"
+>
+  <StayBooking client:load lang={lang} rooms={rooms} />
+</BaseLayout>

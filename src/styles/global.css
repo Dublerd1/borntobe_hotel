@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* ===== Design Tokens ===== */
+@theme {
+  --color-bg: #F7F5F2;
+  --color-surface: #EDEAE6;
+  --color-dark: #141414;
+  --color-gold: #C8965A;
+  --color-muted: #5C5C5C;
+  --color-border: #D9D5D0;
+  --color-night: #111111;
+  --color-cream: #F7F5F2;
+  --color-pool: #4EBFBF;
+
+  --font-sans: 'Inter', sans-serif;
+
+  --radius-DEFAULT: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-full: 0px;
+
+  --tracking-hero: 0.08em;
+  --tracking-section: 0.06em;
+  --tracking-card: 0.02em;
+  --tracking-caption: 0.1em;
+  --tracking-logo: 0.12em;
+  --tracking-menu: 0.1em;
+}
+
+/* ===== Base ===== */
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border); }
+
+/* ===== Flatpickr Overrides ===== */
+.flatpickr-calendar {
+  border-radius: 0 !important;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.2) !important;
+  border: 1px solid var(--color-border) !important;
+  font-family: var(--font-sans) !important;
+  padding: 8px !important;
+  z-index: 9999 !important;
+}
+.flatpickr-calendar.open {
+  z-index: 9999 !important;
+}
+.flatpickr-months { padding: 8px 4px !important; }
+.flatpickr-months .flatpickr-month { height: 40px !important; }
+.flatpickr-current-month {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+span.flatpickr-weekday {
+  color: var(--color-muted) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+}
+.flatpickr-day {
+  border-radius: 0 !important;
+  font-size: 14px !important;
+  color: var(--color-dark) !important;
+  height: 38px !important;
+  line-height: 38px !important;
+}
+.flatpickr-day:hover {
+  background: var(--color-surface) !important;
+  border-color: transparent !important;
+}
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background: var(--color-dark) !important;
+  border-color: var(--color-dark) !important;
+  color: var(--color-cream) !important;
+}
+.flatpickr-day.inRange {
+  background: var(--color-surface) !important;
+  border-color: var(--color-surface) !important;
+  box-shadow: -5px 0 0 var(--color-surface), 5px 0 0 var(--color-surface) !important;
+}
+.flatpickr-day.today { border-color: var(--color-gold) !important; }
+.flatpickr-day.today:hover { background: var(--color-gold) !important; color: #fff !important; }
+.flatpickr-day.flatpickr-disabled { color: var(--color-border) !important; }
+.flatpickr-prev-month:hover svg,
+.flatpickr-next-month:hover svg { fill: var(--color-gold) !important; }
+.flatpickr-input { cursor: pointer !important; }
+
+/* ===== Navbar ===== */
+nav.scrolled {
+  background: #141414 !important;
+}
+
+/* ===== Animations ===== */
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Modal ===== */
+.modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+.modal-content { transform: translateY(40px); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+.modal-overlay.active .modal-content { transform: translateY(0); }
+
+/* ===== Gallery ===== */
+.gallery-thumb { opacity: 0.5; transition: opacity 0.2s ease; cursor: pointer; }
+.gallery-thumb.active, .gallery-thumb:hover { opacity: 1; }

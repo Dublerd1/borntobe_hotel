@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import StayBooking from '@components/interactive/StayBooking'
+import { rooms } from '@data/rooms'
+
+const lang = 'en'
+---
+
+<BaseLayout
+  title="Stay | Born To Be Complex — Boutique Apartments Pererenan Bali"
+  description="Lifestyle apartments with pool, cafe, community events in Pererenan. 9 room types from $55/night."
+  lang={lang}
+  canonical="https://borntobecomplex.com/stay"
+>
+  <StayBooking client:load lang={lang} rooms={rooms} />
+</BaseLayout>

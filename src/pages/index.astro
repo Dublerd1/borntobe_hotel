@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import Hero from '@components/Hero.astro'
+
+const lang = 'en'
+---
+
+<BaseLayout
+  title="Born To Be Complex — Boutique Lifestyle Hotel in Pererenan, Bali"
+  description="A lifestyle ecosystem in Pererenan, Bali. Boutique apartments, cafe, community events, rooftop. From $55/night."
+  lang={lang}
+  canonical="https://borntobecomplex.com/"
+>
+  <Hero lang={lang} backgroundImage="/content/photos/01-hero/night_facade_pool_float.jpg">
+    <div slot="default"></div>
+  </Hero>
+
+  <!-- Stay Preview -->
+  <section class="bg-bg py-24 md:py-32">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20">
+      <div class="text-center mb-16">
+        <h2 class="text-[28px] md:text-[40px] font-bold tracking-section uppercase mb-4">Stay</h2>
+        <div class="w-12 h-[2px] bg-gold mx-auto mb-6"></div>
+        <p class="text-muted text-[15px] max-w-[560px] mx-auto leading-relaxed">
+          9 unique apartments and townhouses. Each with its own character, view, and story. From cozy studios to spacious two-floor townhouses.
+        </p>
+      </div>
+      <div class="text-center">
+        <a href="/stay" class="inline-block bg-dark text-cream text-[14px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold transition-colors duration-300 cursor-pointer">
+          View Rooms & Book
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Eat Preview -->
+  <section class="bg-night py-24 md:py-32">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20">
+      <div class="text-center mb-16">
+        <h2 class="text-[28px] md:text-[40px] font-bold tracking-section uppercase text-cream mb-4">Eat</h2>
+        <div class="w-12 h-[2px] bg-gold mx-auto mb-6"></div>
+        <p class="text-cream/60 text-[15px] max-w-[560px] mx-auto leading-relaxed">
+          Our cafe serves healthy, soulful food. Smoothie bowls, fresh juices, signature dishes. Open for guests and locals.
+        </p>
+      </div>
+      <div class="text-center">
+        <a href="/eat" class="inline-block border border-cream text-cream text-[14px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold hover:border-gold transition-colors duration-300 cursor-pointer">
+          Explore Menu
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Preview -->
+  <section class="bg-bg py-24 md:py-32">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20">
+      <div class="text-center mb-16">
+        <h2 class="text-[28px] md:text-[40px] font-bold tracking-section uppercase mb-4">Live</h2>
+        <div class="w-12 h-[2px] bg-gold mx-auto mb-6"></div>
+        <p class="text-muted text-[15px] max-w-[560px] mx-auto leading-relaxed">
+          More than a hotel. Rooftop events, fitness, co-working, Born To Be Wear brand. A community of like-minded people.
+        </p>
+      </div>
+      <div class="text-center">
+        <a href="/community" class="inline-block bg-dark text-cream text-[14px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold transition-colors duration-300 cursor-pointer">
+          Discover Community
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

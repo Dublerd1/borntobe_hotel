@@ -1,0 +1,68 @@
+---
+import '../styles/global.css'
+import Navbar from '@components/Navbar.astro'
+import Footer from '@components/Footer.astro'
+import type { Lang } from '@utils/i18n'
+
+interface Props {
+  title: string
+  description?: string
+  lang?: Lang
+  ogImage?: string
+  canonical?: string
+}
+
+const {
+  title,
+  description = 'Lifestyle apartments with pool, cafe, community events in Pererenan, Bali. From $55/night.',
+  lang = 'en',
+  ogImage = '/og-image.jpg',
+  canonical,
+} = Astro.props
+
+const altLang = lang === 'en' ? 'ru' : 'en'
+const currentPath = Astro.url.pathname
+const cleanPath = currentPath.replace(/^\/ru/, '') || '/'
+const enUrl = `https://borntobecomplex.com${cleanPath}`
+const ruUrl = `https://borntobecomplex.com/ru${cleanPath === '/' ? '/' : cleanPath}`
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:type" content="website" />
+
+  <!-- Canonical + hreflang -->
+  {canonical && <link rel="canonical" href={canonical} />}
+  <link rel="alternate" hreflang="en" href={enUrl} />
+  <link rel="alternate" hreflang="ru" href={ruUrl} />
+  <link rel="alternate" hreflang="x-default" href={enUrl} />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Flatpickr CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" />
+</head>
+<body>
+  <Navbar lang={lang} />
+  <main>
+    <slot />
+  </main>
+  <Footer lang={lang} />
+</body>
+</html>

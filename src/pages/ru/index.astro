@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import Hero from '@components/Hero.astro'
+
+const lang = 'ru'
+---
+
+<BaseLayout
+  title="Born To Be Complex — Бутик-отель в Перереnan, Бали"
+  description="Экосистема стиля жизни в Перереnan, Бали. Апартаменты, кафе, комьюнити, руфтоп. От $55/ночь."
+  lang={lang}
+  canonical="https://borntobecomplex.com/ru/"
+>
+  <Hero lang={lang} backgroundImage="/content/photos/01-hero/night_facade_pool_float.jpg">
+    <div slot="default"></div>
+  </Hero>
+
+  <!-- Stay Preview -->
+  <section class="bg-bg py-24 md:py-32">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20">
+      <div class="text-center mb-16">
+        <h2 class="text-[28px] md:text-[40px] font-bold tracking-section uppercase mb-4">Номера</h2>
+        <div class="w-12 h-[2px] bg-gold mx-auto mb-6"></div>
+        <p class="text-muted text-[15px] max-w-[560px] mx-auto leading-relaxed">
+          9 уникальных апартаментов и таунхаусов. Каждый со своим характером, видом и историей. От уютных студий до просторных двухэтажных таунхаусов.
+        </p>
+      </div>
+      <div class="text-center">
+        <a href="/ru/stay" class="inline-block bg-dark text-cream text-[14px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold transition-colors duration-300 cursor-pointer">
+          Смотреть номера
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Eat Preview -->
+  <section class="bg-night py-24 md:py-32">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20">
+      <div class="text-center mb-16">
+        <h2 class="text-[28px] md:text-[40px] font-bold tracking-section uppercase text-cream mb-4">Кафе</h2>
+        <div class="w-12 h-[2px] bg-gold mx-auto mb-6"></div>
+        <p class="text-cream/60 text-[15px] max-w-[560px] mx-auto leading-relaxed">
+          Здоровая, вкусная еда с душой. Смузи-боулы, свежие соки, авторские блюда. Открыто для гостей и местных.
+        </p>
+      </div>
+      <div class="text-center">
+        <a href="/ru/eat" class="inline-block border border-cream text-cream text-[14px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold hover:border-gold transition-colors duration-300 cursor-pointer">
+          Меню
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Preview -->
+  <section class="bg-bg py-24 md:py-32">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-20">
+      <div class="text-center mb-16">
+        <h2 class="text-[28px] md:text-[40px] font-bold tracking-section uppercase mb-4">Жизнь</h2>
+        <div class="w-12 h-[2px] bg-gold mx-auto mb-6"></div>
+        <p class="text-muted text-[15px] max-w-[560px] mx-auto leading-relaxed">
+          Больше чем отель. Руфтоп-ивенты, фитнес, коворкинг, бренд Born To Be Wear. Комьюнити единомышленников.
+        </p>
+      </div>
+      <div class="text-center">
+        <a href="/ru/community" class="inline-block bg-dark text-cream text-[14px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold transition-colors duration-300 cursor-pointer">
+          Комьюнити
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
