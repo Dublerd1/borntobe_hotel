@@ -4,9 +4,10 @@ import type { Lang } from '@utils/i18n'
 
 interface Props {
   lang: Lang
+  hideBook?: boolean
 }
 
-const { lang } = Astro.props
+const { lang, hideBook = false } = Astro.props
 const tr = t(lang)
 const altLang = lang === 'en' ? 'ru' : 'en'
 const langLabel = lang === 'en' ? 'RU' : 'EN'
@@ -31,7 +32,7 @@ const locationUrl = lang === 'ru' ? '/ru/location' : '/location'
     </div>
     <div class="hidden md:flex items-center gap-6">
       <a href={altUrl} class="text-white/70 text-[13px] font-normal tracking-menu uppercase hover:text-white transition-colors duration-300">{langLabel}</a>
-      <a href={stayUrl} class="bg-dark text-cream text-[13px] font-semibold tracking-[1.5px] uppercase px-6 py-2.5 hover:bg-gold transition-colors duration-300 cursor-pointer">{tr.nav.book}</a>
+      {!hideBook && <a href={stayUrl} class="bg-dark text-cream text-[13px] font-semibold tracking-[1.5px] uppercase px-6 py-2.5 hover:bg-gold transition-colors duration-300 cursor-pointer">{tr.nav.book}</a>}
     </div>
     <button id="mobileMenuBtn" class="md:hidden text-white cursor-pointer" aria-label="Open menu">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -48,9 +49,9 @@ const locationUrl = lang === 'ru' ? '/ru/location' : '/location'
   <a href={eatUrl} class="text-cream text-2xl font-light tracking-section uppercase">{tr.nav.eat}</a>
   <a href={liveUrl} class="text-cream text-2xl font-light tracking-section uppercase">{tr.nav.live}</a>
   <a href={locationUrl} class="text-cream text-2xl font-light tracking-section uppercase">{tr.nav.location}</a>
-  <div class="mt-4">
+  {!hideBook && <div class="mt-4">
     <a href={stayUrl} class="bg-dark text-cream text-[13px] font-semibold tracking-caption uppercase px-10 py-4 hover:bg-gold transition-colors duration-300">{tr.nav.book}</a>
-  </div>
+  </div>}
   <a href={altUrl} class="text-cream/50 text-sm tracking-caption uppercase mt-4">{langLabel}</a>
 </div>
 
