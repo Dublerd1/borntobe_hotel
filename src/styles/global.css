@@ -172,10 +172,15 @@ span.flatpickr-weekday {
   box-shadow: none !important;
   color: var(--color-cream) !important;
 }
-/* Calendar phase indicator (CHECK-IN → CHECK-OUT animation) */
-.calendar-phase-indicator {
-  text-align: center;
+/* Calendar custom header (phase indicator + nights counter) */
+.calendar-header-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 10px 12px 2px;
+}
+.calendar-phase-indicator {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -185,6 +190,24 @@ span.flatpickr-weekday {
 }
 .calendar-phase-indicator.phase-checkout {
   color: var(--color-gold);
+}
+.calendar-nights-counter {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-gold);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.calendar-nights-counter::before {
+  content: '·';
+  margin-right: 8px;
+  color: rgba(255,255,255,0.2);
+}
+.calendar-nights-counter.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 .flatpickr-input { cursor: pointer !important; }
 
@@ -258,12 +281,18 @@ span.flatpickr-weekday {
 .flatpickr-light .flatpickr-rContainer {
   background: transparent !important;
 }
-/* Phase indicator — light theme */
+/* Phase indicator & nights counter — light theme */
 .flatpickr-light .calendar-phase-indicator {
   color: #5C5C5C;
 }
 .flatpickr-light .calendar-phase-indicator.phase-checkout {
   color: var(--color-gold);
+}
+.flatpickr-light .calendar-nights-counter {
+  color: var(--color-gold);
+}
+.flatpickr-light .calendar-nights-counter::before {
+  color: #D9D5D0;
 }
 /* Custom range highlight — light theme */
 .flatpickr-light .flatpickr-day.in-range-custom {

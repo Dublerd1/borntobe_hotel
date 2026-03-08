@@ -83,6 +83,24 @@ export default function StayBooking({ lang, rooms }: Props) {
         }
       }
 
+      // Night counter helper
+      const nightsWord = (n: number) => n === 1 ? t.rooms.night : t.rooms.nights
+      const calcNights = (start: Date, end: Date) => Math.max(1, Math.round((end.getTime() - start.getTime()) / 86400000))
+
+      const updateNightsCounter = (fp: any, endDate?: Date) => {
+        const counter = fp.calendarContainer.querySelector('.calendar-nights-counter') as HTMLElement | null
+        if (!counter) return
+        const ci = fp.selectedDates[0]
+        const co = endDate ?? fp.selectedDates[1]
+        if (ci && co && co > ci) {
+          const n = calcNights(ci, co)
+          counter.textContent = `${n} ${nightsWord(n)}`
+          counter.classList.add('visible')
+        } else {
+          counter.classList.remove('visible')
+        }
+      }
+
       const createRangeOpts = (
         ciRef: React.RefObject<HTMLInputElement | null>,
         coRef: React.RefObject<HTMLInputElement | null>,
@@ -96,12 +114,26 @@ export default function StayBooking({ lang, rooms }: Props) {
         monthSelectorType: 'static' as const,
         disableMobile: true,
         onReady(_dObj: any, _dStr: any, fp: any) {
-          // Phase indicator inside calendar
-          const indicator = document.createElement('div')
-          indicator.className = 'calendar-phase-indicator'
-          indicator.textContent = t.booking.checkIn
-          fp.calendarContainer.insertBefore(indicator, fp.calendarContainer.firstChild)
+          // Phase indicator + nights counter
+          const header = document.createElement('div')
+          header.className = 'calendar-header-custom'
+          header.innerHTML = '<div class="calendar-phase-indicator">' + t.booking.checkIn + '</div><div class="calendar-nights-counter"></div>'
+          fp.calendarContainer.insertBefore(header, fp.calendarContainer.firstChild)
           setTimeout(() => fixInputValues(fp, ciRef, coRef, ciRefSync, coRefSync), 0)
+          // Hover listener for live night counter
+          fp.calendarContainer.addEventListener('mouseover', (e: MouseEvent) => {
+            if (fp.selectedDates.length !== 1) return
+            const dayEl = (e.target as HTMLElement).closest('.flatpickr-day') as any
+            if (dayEl?.dateObj && dayEl.dateObj > fp.selectedDates[0]) {
+              updateNightsCounter(fp, dayEl.dateObj)
+            }
+          })
+          fp.calendarContainer.addEventListener('mouseleave', () => {
+            if (fp.selectedDates.length === 1) {
+              const counter = fp.calendarContainer.querySelector('.calendar-nights-counter') as HTMLElement | null
+              if (counter) counter.classList.remove('visible')
+            }
+          })
         },
         onChange(selectedDates: Date[], _: string, fp: any) {
           const indicator = fp.calendarContainer.querySelector('.calendar-phase-indicator')
@@ -120,6 +152,7 @@ export default function StayBooking({ lang, rooms }: Props) {
               setTimeout(() => fixInputValues(syncFp, ciRefSync, coRefSync, ciRef, coRef), 0)
             }
           }
+          updateNightsCounter(fp)
           setTimeout(() => fixInputValues(fp, ciRef, coRef, ciRefSync, coRefSync), 0)
         },
         onOpen(_: any, __: any, fp: any) {
@@ -129,6 +162,7 @@ export default function StayBooking({ lang, rooms }: Props) {
             indicator.textContent = isCheckout ? t.booking.checkOut : t.booking.checkIn
             indicator.classList.toggle('phase-checkout', isCheckout)
           }
+          updateNightsCounter(fp)
         },
         onMonthChange(_: any, __: any, fp: any) {
           setTimeout(() => fixInputValues(fp, ciRef, coRef, ciRefSync, coRefSync), 0)
@@ -169,6 +203,23 @@ export default function StayBooking({ lang, rooms }: Props) {
       if (modalCheckIn) defaults.push(modalCheckIn)
       if (modalCheckIn && modalCheckOut) defaults.push(modalCheckOut)
 
+      // Night counter helper (modal)
+      const nightsWord = (n: number) => n === 1 ? t.rooms.night : t.rooms.nights
+      const calcNights = (start: Date, end: Date) => Math.max(1, Math.round((end.getTime() - start.getTime()) / 86400000))
+      const updateModalNightsCounter = (fp: any, endDate?: Date) => {
+        const counter = fp.calendarContainer.querySelector('.calendar-nights-counter') as HTMLElement | null
+        if (!counter) return
+        const ci = fp.selectedDates[0]
+        const co = endDate ?? fp.selectedDates[1]
+        if (ci && co && co > ci) {
+          const n = calcNights(ci, co)
+          counter.textContent = `${n} ${nightsWord(n)}`
+          counter.classList.add('visible')
+        } else {
+          counter.classList.remove('visible')
+        }
+      }
+
       flatpickr(modalCheckInRef.current, {
         mode: 'range' as any,
         dateFormat: 'd M',
@@ -177,11 +228,11 @@ export default function StayBooking({ lang, rooms }: Props) {
         disableMobile: true,
         onReady(_: any, __: any, fp: any) {
           fp.calendarContainer?.classList.add('flatpickr-light')
-          // Phase indicator
-          const indicator = document.createElement('div')
-          indicator.className = 'calendar-phase-indicator'
-          indicator.textContent = t.booking.checkIn
-          fp.calendarContainer.insertBefore(indicator, fp.calendarContainer.firstChild)
+          // Phase indicator + nights counter
+          const header = document.createElement('div')
+          header.className = 'calendar-header-custom'
+          header.innerHTML = '<div class="calendar-phase-indicator">' + t.booking.checkIn + '</div><div class="calendar-nights-counter"></div>'
+          fp.calendarContainer.insertBefore(header, fp.calendarContainer.firstChild)
           // Fix input values
           setTimeout(() => {
             if (fp.selectedDates.length >= 1 && modalCheckInRef.current) {
@@ -191,6 +242,20 @@ export default function StayBooking({ lang, rooms }: Props) {
               modalCheckOutRef.current.value = fp.formatDate(fp.selectedDates[1], 'd M')
             }
           }, 0)
+          // Hover listener for live night counter
+          fp.calendarContainer.addEventListener('mouseover', (e: MouseEvent) => {
+            if (fp.selectedDates.length !== 1) return
+            const dayEl = (e.target as HTMLElement).closest('.flatpickr-day') as any
+            if (dayEl?.dateObj && dayEl.dateObj > fp.selectedDates[0]) {
+              updateModalNightsCounter(fp, dayEl.dateObj)
+            }
+          })
+          fp.calendarContainer.addEventListener('mouseleave', () => {
+            if (fp.selectedDates.length === 1) {
+              const counter = fp.calendarContainer.querySelector('.calendar-nights-counter') as HTMLElement | null
+              if (counter) counter.classList.remove('visible')
+            }
+          })
         },
         onChange(selectedDates: Date[], _: string, fp: any) {
           const indicator = fp.calendarContainer.querySelector('.calendar-phase-indicator')
@@ -209,6 +274,7 @@ export default function StayBooking({ lang, rooms }: Props) {
               indicator.classList.remove('phase-checkout')
             }
           }
+          updateModalNightsCounter(fp)
           // Fix check-in input value (override range "date1 to date2")
           setTimeout(() => {
             if (selectedDates.length >= 1 && modalCheckInRef.current) {
@@ -226,6 +292,7 @@ export default function StayBooking({ lang, rooms }: Props) {
             indicator.textContent = isCheckout ? t.booking.checkOut : t.booking.checkIn
             indicator.classList.toggle('phase-checkout', isCheckout)
           }
+          updateModalNightsCounter(fp)
         },
       })
 
