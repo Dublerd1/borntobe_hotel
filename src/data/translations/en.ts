@@ -47,9 +47,9 @@ export const en = {
     navigate: 'NAVIGATE',
     connect: 'CONNECT',
     location: 'LOCATION',
-    copyright: '\u00a9 2024 Born To Be. All rights reserved.',
+    copyright: '\u00a9 2026 Born To Be. All rights reserved.',
     slogan: "Don't pretend, just be",
-    locationText: 'Pererenan, Bali\n#1 Coolest Neighborhood\nin Asia \u2014 Time Out 2024',
+    locationText: 'Jl. Pantai Pererenan\nPererenan, Bali',
   },
 } as const
 

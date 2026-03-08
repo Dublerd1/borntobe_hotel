@@ -49,8 +49,8 @@ export const ru: Translations = {
     navigate: 'НАВИГАЦИЯ',
     connect: 'СВЯЗЬ',
     location: 'ЛОКАЦИЯ',
-    copyright: '\u00a9 2024 Born To Be. Все права защищены.',
+    copyright: '\u00a9 2026 Born To Be. Все права защищены.',
     slogan: "Don't pretend, just be",
-    locationText: 'Перереnan, Бали\n#1 Самый крутой район\nАзии \u2014 Time Out 2024',
+    locationText: 'Jl. Pantai Pererenan\nПеререnan, Бали',
   },
 }
