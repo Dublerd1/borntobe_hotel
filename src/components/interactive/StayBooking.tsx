@@ -170,10 +170,9 @@ export default function StayBooking({ lang, rooms }: Props) {
       if (checkOutRef.current) flatpickr(checkOutRef.current, createOpts(true))
       if (checkInMobileRef.current) flatpickr(checkInMobileRef.current, createOpts(false))
       if (checkOutMobileRef.current) flatpickr(checkOutMobileRef.current, createOpts(true))
-      // Attach hover trail listeners
-      const heroRefs: React.RefObject<HTMLInputElement | null>[] = []
+      // Attach hover trail listeners — only on check-out calendars
       const heroCIRefs = [checkInRef, checkInMobileRef]
-      ;[checkInRef, checkOutRef, checkInMobileRef, checkOutMobileRef].forEach(ref => {
+      ;[checkOutRef, checkOutMobileRef].forEach(ref => {
         const fp = (ref.current as any)?._flatpickr
         if (fp) attachHoverListeners(fp, heroCIRefs, [])
       })
@@ -244,13 +243,11 @@ export default function StayBooking({ lang, rooms }: Props) {
           },
         })
       }
-      // Attach hover trail listeners to modal calendars
+      // Attach hover trail listeners — only on modal check-out calendar
       const modalCIRefs = [modalCheckInRef]
       const modalTargetRefs = [modalCheckInRef, modalCheckOutRef]
-      ;[modalCheckInRef, modalCheckOutRef].forEach(ref => {
-        const fp = (ref.current as any)?._flatpickr
-        if (fp) attachHoverListeners(fp, modalCIRefs, modalTargetRefs)
-      })
+      const coFp = (modalCheckOutRef.current as any)?._flatpickr
+      if (coFp) attachHoverListeners(coFp, modalCIRefs, modalTargetRefs)
     }
     // Small delay to ensure DOM is ready
     const timer = setTimeout(initModalPickers, 50)
