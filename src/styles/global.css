@@ -171,6 +171,16 @@ nav.scrolled {
   background: #141414 !important;
 }
 
+/* ===== Room Cards ===== */
+.card-photo-tall {
+  aspect-ratio: 3/2;
+}
+@media (min-width: 768px) {
+  .card-photo-tall {
+    aspect-ratio: 3/4;
+  }
+}
+
 /* ===== Animations ===== */
 .fade-up {
   opacity: 0;
