@@ -51,7 +51,7 @@ export default function StayBooking({ lang, rooms }: Props) {
       weekLater.setDate(weekLater.getDate() + 8)
 
       const createOpts = (isCheckOut: boolean) => ({
-        dateFormat: 'd M Y',
+        dateFormat: 'd M',
         minDate: isCheckOut ? weekLater : tomorrow,
         defaultDate: isCheckOut ? weekLater : tomorrow,
         monthSelectorType: 'static' as const,
