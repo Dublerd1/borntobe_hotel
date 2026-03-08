@@ -175,12 +175,16 @@ export default function StayBooking({ lang, rooms }: Props) {
     return () => { window.removeEventListener('scroll', handleScroll); if (navbar) navbar.style.transform = '' }
   }, [searchParams])
 
-  // Search
+  // Search — pick the flatpickr that actually has 2 dates selected
   const handleSearch = useCallback(() => {
-    const fp = (checkInRef.current as any)?._flatpickr ?? (checkInMobileRef.current as any)?._flatpickr
-    const ci = fp?.selectedDates?.[0]
-    const co = fp?.selectedDates?.[1]
-    if (!ci || !co) return
+    const desktopFp = (checkInRef.current as any)?._flatpickr
+    const mobileFp = (checkInMobileRef.current as any)?._flatpickr
+    const fp = mobileFp?.selectedDates?.length === 2 ? mobileFp
+             : desktopFp?.selectedDates?.length === 2 ? desktopFp
+             : null
+    if (!fp) return
+    const ci = fp.selectedDates[0]
+    const co = fp.selectedDates[1]
     setSearchParams({ checkIn: ci, checkOut: co, guests, children, propertyType })
   }, [guests, children, propertyType])
 
