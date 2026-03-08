@@ -594,8 +594,8 @@ export default function StayBooking({ lang, rooms }: Props) {
                     className="fade-up cursor-pointer flex flex-col group relative"
                     style={{ background: '#FFFFFF', border: '2px solid #141414', boxShadow: '4px 4px 0 #141414', transitionDelay: `${i*0.08}s`, transition: 'box-shadow 0.4s ease, transform 0.4s ease' }}
                     onClick={() => { setModalRoom(room); setModalNights(nights); setActivePhoto(0); setBookingStep('details'); setBookingName(''); setBookingContact(''); setModalCheckIn(searchParams?.checkIn ?? null); setModalCheckOut(searchParams?.checkOut ?? null); document.body.style.overflow = 'hidden' }}
-                    onMouseEnter={e => { e.currentTarget.style.boxShadow = '6px 6px 0 #C8965A'; e.currentTarget.style.transform = 'translate(-2px, -2px)' }}
-                    onMouseLeave={e => { e.currentTarget.style.boxShadow = '4px 4px 0 #141414'; e.currentTarget.style.transform = 'none' }}
+                    onMouseEnter={e => { e.currentTarget.style.boxShadow = '6px 6px 0 #C8965A'; e.currentTarget.style.transform = 'translate(-2px, -2px)'; const lbl = e.currentTarget.querySelector('.card-type-label') as HTMLElement; if (lbl) lbl.style.color = '#C8965A'; const badge = e.currentTarget.querySelector('.card-price-badge') as HTMLElement; if (badge) badge.style.background = '#C8965A' }}
+                    onMouseLeave={e => { e.currentTarget.style.boxShadow = '4px 4px 0 #141414'; e.currentTarget.style.transform = 'none'; const lbl = e.currentTarget.querySelector('.card-type-label') as HTMLElement; if (lbl) lbl.style.color = '#141414'; const badge = e.currentTarget.querySelector('.card-price-badge') as HTMLElement; if (badge) badge.style.background = '#141414' }}
                   >
                     {/* Gold top line — appears on hover */}
                     <div className="absolute top-[-2px] left-[-2px] right-[-2px] h-[3px] z-10 transition-transform duration-500 origin-left scale-x-0 group-hover:scale-x-100" style={{ background: '#C8965A' }} />
@@ -616,14 +616,14 @@ export default function StayBooking({ lang, rooms }: Props) {
                         <span className="text-white text-[11px] font-medium">{room.photos.length}</span>
                       </div>
                       {/* Price badge on photo */}
-                      <div className="absolute top-0 left-0 px-3 py-1.5" style={{ background: '#C8965A' }}>
+                      <div className="absolute top-0 left-0 px-3 py-1.5 card-price-badge" style={{ background: '#141414', transition: 'background 0.3s ease' }}>
                         <span className="text-[12px] font-bold text-white tracking-wide">${price.perNight}<span className="font-normal text-white/70 text-[10px] ml-0.5">{price.isMonthly ? '/mo' : '/night'}</span></span>
                       </div>
                     </div>
 
                     <div className="p-6 flex-1 flex flex-col justify-between">
                       <div>
-                        <p className="text-[11px] font-semibold uppercase mb-3" style={{ letterSpacing: '0.12em', color: '#C8965A' }}>{typeLabel}</p>
+                        <p className="text-[11px] font-semibold uppercase mb-3 card-type-label" style={{ letterSpacing: '0.12em', color: '#141414', transition: 'color 0.3s ease' }}>{typeLabel}</p>
                         <h3 className="text-[20px] font-bold uppercase mb-2" style={{ letterSpacing: '0.04em', color: '#141414' }}>{name}</h3>
                         <p className="text-[12px] uppercase mb-4" style={{ letterSpacing: '0.08em', color: '#5C5C5C' }}>{features.join(' \u00b7 ')}</p>
                       </div>
@@ -746,7 +746,7 @@ export default function StayBooking({ lang, rooms }: Props) {
                           [t.rooms.kitchen, kitchenText],
                         ].map(([label, val]) => (
                           <div key={label}>
-                            <p className="text-[11px] font-medium uppercase mb-1" style={{ letterSpacing: '0.1em', color: '#5C5C5C' }}>{label}</p>
+                            <p className="text-[11px] font-medium uppercase mb-1" style={{ letterSpacing: '0.1em', color: '#141414' }}>{label}</p>
                             <p className="font-medium">{val}</p>
                           </div>
                         ))}
@@ -782,9 +782,9 @@ export default function StayBooking({ lang, rooms }: Props) {
                       <button
                         onClick={() => { setBookingStep('form'); setBookingId(generateBookingId()) }}
                         className="w-full text-[13px] font-semibold uppercase py-4 cursor-pointer transition-colors duration-300 text-center"
-                        style={{ background: '#C8965A', color: '#F7F5F2', letterSpacing: '0.1em' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = '#141414' }}
-                        onMouseLeave={e => { e.currentTarget.style.background = '#C8965A' }}
+                        style={{ background: '#141414', color: '#F7F5F2', letterSpacing: '0.1em' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#C8965A' }}
+                        onMouseLeave={e => { e.currentTarget.style.background = '#141414' }}
                       >
                         {t.rooms.bookNow}
                       </button>
