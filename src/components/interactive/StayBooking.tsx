@@ -89,14 +89,17 @@ export default function StayBooking({ lang, rooms }: Props) {
     loadFlatpickr()
   }, [])
 
-  // Sticky scroll
+  // Sticky scroll — hide navbar when booking bar is sticky
   useEffect(() => {
+    const navbar = document.getElementById('navbar')
     const handleScroll = () => {
-      if (!searchParams) { setIsSticky(false); return }
-      setIsSticky(window.scrollY > window.innerHeight - 200)
+      if (!searchParams) { setIsSticky(false); if (navbar) navbar.style.transform = ''; return }
+      const shouldStick = window.scrollY > window.innerHeight - 200
+      setIsSticky(shouldStick)
+      if (navbar) navbar.style.transform = shouldStick ? 'translateY(-100%)' : ''
     }
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => { window.removeEventListener('scroll', handleScroll); if (navbar) navbar.style.transform = '' }
   }, [searchParams])
 
   // Search
@@ -182,7 +185,7 @@ export default function StayBooking({ lang, rooms }: Props) {
         <div
           id="bookingWrapper"
           className={isSticky
-            ? 'fixed top-[64px] md:top-[80px] left-0 right-0 z-40 w-full'
+            ? 'fixed top-0 left-0 right-0 z-50 w-full'
             : 'absolute bottom-[60px] md:bottom-[80px] left-0 right-0 z-10 px-4 md:px-10 lg:px-20'
           }
         >
@@ -197,47 +200,51 @@ export default function StayBooking({ lang, rooms }: Props) {
             }
           >
             {/* Desktop */}
-            <div className="hidden md:flex items-center">
-              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-5 py-4'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.checkIn}</label>
+            <div className="hidden md:flex items-center" style={isSticky ? { height: '56px', padding: '0 24px' } : undefined}>
+              {/* Logo — only visible in sticky */}
+              {isSticky && (
+                <a href={lang === 'ru' ? '/ru/' : '/'} className="text-white font-bold text-sm shrink-0 mr-6" style={{ letterSpacing: '0.12em' }}>BORN TO BE</a>
+              )}
+              <div className={isSticky ? 'flex-1 px-3 py-0' : 'flex-1 px-5 py-4'}>
+                {!isSticky && <label className="block text-[10px] mb-0.5 text-white/50 font-semibold tracking-[1.5px] uppercase">{t.booking.checkIn}</label>}
                 <input ref={checkInRef} type="text" className={`w-full bg-transparent text-white font-normal focus:outline-none cursor-pointer ${isSticky ? 'text-[13px]' : 'text-[14px]'}`} placeholder="Select" readOnly />
               </div>
-              <div className={`w-px shrink-0 ${isSticky ? 'h-6 bg-white/25' : 'h-8 bg-white/[0.12]'}`} />
-              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-5 py-4'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.checkOut}</label>
+              <div className={`w-px shrink-0 ${isSticky ? 'h-5 bg-white/20' : 'h-8 bg-white/[0.12]'}`} />
+              <div className={isSticky ? 'flex-1 px-3 py-0' : 'flex-1 px-5 py-4'}>
+                {!isSticky && <label className="block text-[10px] mb-0.5 text-white/50 font-semibold tracking-[1.5px] uppercase">{t.booking.checkOut}</label>}
                 <input ref={checkOutRef} type="text" className={`w-full bg-transparent text-white font-normal focus:outline-none cursor-pointer ${isSticky ? 'text-[13px]' : 'text-[14px]'}`} placeholder="Select" readOnly />
               </div>
-              <div className={`w-px shrink-0 ${isSticky ? 'h-6 bg-white/25' : 'h-8 bg-white/[0.12]'}`} />
-              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-5 py-4'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.guests}</label>
-                <select value={guests} onChange={e => setGuests(Number(e.target.value))} className={`w-full bg-transparent text-white font-normal focus:outline-none pr-5 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'text-[14px]'}`}
-                  style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}>
+              <div className={`w-px shrink-0 ${isSticky ? 'h-5 bg-white/20' : 'h-8 bg-white/[0.12]'}`} />
+              <div className={isSticky ? 'px-3 py-0' : 'flex-1 px-5 py-4'}>
+                {!isSticky && <label className="block text-[10px] mb-0.5 text-white/50 font-semibold tracking-[1.5px] uppercase">{t.booking.guests}</label>}
+                <select value={guests} onChange={e => setGuests(Number(e.target.value))} className={`bg-transparent text-white font-normal focus:outline-none pr-4 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'w-full text-[14px] pr-5'}`}
+                  style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0 center' }}>
                   {t.booking.guestOptions.map((label, i) => <option key={i} value={i+1} style={{ background: '#141414', color: 'white' }}>{label}</option>)}
                 </select>
               </div>
-              <div className={`w-px shrink-0 ${isSticky ? 'h-6 bg-white/25' : 'h-8 bg-white/[0.12]'}`} />
-              <div className={isSticky ? 'flex-[0.6] px-4 py-2' : 'flex-[0.6] px-4 py-4'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.children}</label>
-                <select value={children} onChange={e => setChildren(Number(e.target.value))} className={`w-full bg-transparent text-white font-normal focus:outline-none pr-5 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'text-[14px]'}`}
-                  style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}>
+              <div className={`w-px shrink-0 ${isSticky ? 'h-5 bg-white/20' : 'h-8 bg-white/[0.12]'}`} />
+              <div className={isSticky ? 'px-3 py-0' : 'flex-[0.6] px-4 py-4'}>
+                {!isSticky && <label className="block text-[10px] mb-0.5 text-white/50 font-semibold tracking-[1.5px] uppercase">{t.booking.children}</label>}
+                <select value={children} onChange={e => setChildren(Number(e.target.value))} className={`bg-transparent text-white font-normal focus:outline-none pr-4 cursor-pointer appearance-none ${isSticky ? 'text-[13px] w-[28px]' : 'w-full text-[14px] pr-5'}`}
+                  style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0 center' }}>
                   {[0,1,2].map(v => <option key={v} value={v} style={{ background: '#141414', color: 'white' }}>{v}</option>)}
                 </select>
               </div>
-              <div className={`w-px shrink-0 ${isSticky ? 'h-6 bg-white/25' : 'h-8 bg-white/[0.12]'}`} />
-              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-4 py-4'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.type}</label>
-                <select value={propertyType} onChange={e => setPropertyType(e.target.value)} className={`w-full bg-transparent text-white font-normal focus:outline-none pr-5 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'text-[14px]'}`}
-                  style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}>
+              <div className={`w-px shrink-0 ${isSticky ? 'h-5 bg-white/20' : 'h-8 bg-white/[0.12]'}`} />
+              <div className={isSticky ? 'px-3 py-0' : 'flex-1 px-4 py-4'}>
+                {!isSticky && <label className="block text-[10px] mb-0.5 text-white/50 font-semibold tracking-[1.5px] uppercase">{t.booking.type}</label>}
+                <select value={propertyType} onChange={e => setPropertyType(e.target.value)} className={`bg-transparent text-white font-normal focus:outline-none pr-4 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'w-full text-[14px] pr-5'}`}
+                  style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0 center' }}>
                   {t.booking.typeOptions.map((label, i) => <option key={i} value={typeValues[i]} style={{ background: '#141414', color: 'white' }}>{label}</option>)}
                 </select>
               </div>
               <button onClick={handleSearch}
-                className={`uppercase shrink-0 cursor-pointer flex items-center justify-center gap-2 font-semibold transition-all duration-300 self-stretch ${isSticky
-                  ? 'px-6 text-[11px] tracking-[1.5px]'
-                  : 'px-7 text-[12px] tracking-[1.5px]'
+                className={`uppercase shrink-0 cursor-pointer flex items-center justify-center font-semibold transition-all duration-300 ${isSticky
+                  ? 'ml-2 gap-1.5 px-4 py-1.5 text-[11px] tracking-[1.5px]'
+                  : 'gap-2 self-stretch px-7 text-[12px] tracking-[1.5px]'
                 }`}
                 style={isSticky
-                  ? { background: '#C8965A', color: '#F7F5F2', borderRadius: 0 }
+                  ? { background: '#C8965A', color: '#F7F5F2' }
                   : { background: 'rgba(255,255,255,0.1)', color: 'white' }
                 }
                 onMouseEnter={e => {
@@ -249,9 +256,18 @@ export default function StayBooking({ lang, rooms }: Props) {
                   else { e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }
                 }}
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <svg width={isSticky ? 12 : 14} height={isSticky ? 12 : 14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 {t.booking.search}
               </button>
+              {/* Book link — only visible in sticky */}
+              {isSticky && (
+                <a href={lang === 'ru' ? '/ru/stay' : '/stay'}
+                  className="shrink-0 ml-6 text-cream text-[12px] font-semibold uppercase cursor-pointer transition-colors duration-300 hover:text-gold"
+                  style={{ letterSpacing: '0.1em' }}
+                >
+                  {t.nav.book}
+                </a>
+              )}
             </div>
 
             {/* Mobile */}
