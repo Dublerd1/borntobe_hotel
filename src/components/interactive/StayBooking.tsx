@@ -155,7 +155,7 @@ export default function StayBooking({ lang, rooms }: Props) {
     <>
       {/* ==================== HERO ==================== */}
       <section
-        className="h-screen relative flex flex-col items-center justify-center bg-cover"
+        className="h-screen relative flex flex-col items-center bg-cover"
         style={{ backgroundImage: "url('/content/photos/01-hero/night_facade_pool_float.jpg')", backgroundPosition: 'center 40%' }}
         id="hero"
       >
@@ -163,16 +163,16 @@ export default function StayBooking({ lang, rooms }: Props) {
           className="absolute inset-0"
           style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.4) 100%)' }}
         />
-        <div className="relative z-10 text-center mb-20 md:mb-24 px-4">
+        <div className="relative z-10 text-center px-4" style={{ marginTop: '35vh' }}>
           <h1
-            className="text-white font-extrabold text-[32px] md:text-[56px] lg:text-[72px] uppercase mb-4 md:mb-5"
-            style={{ letterSpacing: '0.08em', textShadow: '0 2px 30px rgba(0,0,0,0.5)' }}
+            className="text-white font-bold text-[56px] md:text-[88px] lg:text-[110px] uppercase"
+            style={{ letterSpacing: '0.08em', textShadow: '0 2px 30px rgba(0,0,0,0.5)', lineHeight: 1 }}
           >
             {t.hero.title}
           </h1>
           <p
-            className="text-white/80 font-medium text-[15px] md:text-[18px] lg:text-[20px]"
-            style={{ letterSpacing: '0.02em', textShadow: '0 2px 30px rgba(0,0,0,0.5)' }}
+            className="text-white/80 italic font-medium text-[18px] md:text-[20px] lg:text-[22px] mt-6 md:mt-8"
+            style={{ letterSpacing: '0.15em', textShadow: '0 2px 30px rgba(0,0,0,0.5)' }}
           >
             {t.hero.subtitle}
           </p>
@@ -189,114 +189,114 @@ export default function StayBooking({ lang, rooms }: Props) {
           <div
             className={isSticky
               ? 'border-t border-white/[0.08]'
-              : 'max-w-[900px] mx-auto border border-white/10'
+              : 'max-w-[900px] mx-auto'
             }
             style={isSticky
-              ? { background: '#141414', backdropFilter: 'none', padding: '0 40px', maxWidth: '100%' }
-              : { background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }
+              ? { background: '#141414', backdropFilter: 'none', padding: '0 40px', maxWidth: '100%', borderRadius: 0 }
+              : { background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', overflow: 'hidden' }
             }
           >
             {/* Desktop */}
             <div className="hidden md:flex items-center">
-              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-6 py-5'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase text-white/50 ${isSticky ? 'text-[9px] mb-px' : 'text-[11px] mb-1'}`}>{t.booking.checkIn}</label>
-                <input ref={checkInRef} type="text" className={`w-full bg-transparent text-white font-normal focus:outline-none cursor-pointer ${isSticky ? 'text-[13px]' : 'text-[15px]'}`} placeholder="Select" readOnly />
+              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-5 py-4'}>
+                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.checkIn}</label>
+                <input ref={checkInRef} type="text" className={`w-full bg-transparent text-white font-normal focus:outline-none cursor-pointer ${isSticky ? 'text-[13px]' : 'text-[14px]'}`} placeholder="Select" readOnly />
               </div>
-              <div className={`w-px bg-white/15 shrink-0 ${isSticky ? 'h-6' : 'h-10'}`} />
-              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-6 py-5'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase text-white/50 ${isSticky ? 'text-[9px] mb-px' : 'text-[11px] mb-1'}`}>{t.booking.checkOut}</label>
-                <input ref={checkOutRef} type="text" className={`w-full bg-transparent text-white font-normal focus:outline-none cursor-pointer ${isSticky ? 'text-[13px]' : 'text-[15px]'}`} placeholder="Select" readOnly />
+              <div className={`w-px shrink-0 ${isSticky ? 'h-6 bg-white/25' : 'h-8 bg-white/[0.12]'}`} />
+              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-5 py-4'}>
+                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.checkOut}</label>
+                <input ref={checkOutRef} type="text" className={`w-full bg-transparent text-white font-normal focus:outline-none cursor-pointer ${isSticky ? 'text-[13px]' : 'text-[14px]'}`} placeholder="Select" readOnly />
               </div>
-              <div className={`w-px bg-white/15 shrink-0 ${isSticky ? 'h-6' : 'h-10'}`} />
-              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-6 py-5'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase text-white/50 ${isSticky ? 'text-[9px] mb-px' : 'text-[11px] mb-1'}`}>{t.booking.guests}</label>
-                <select value={guests} onChange={e => setGuests(Number(e.target.value))} className={`w-full bg-transparent text-white font-normal focus:outline-none pr-5 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'text-[15px]'}`}
+              <div className={`w-px shrink-0 ${isSticky ? 'h-6 bg-white/25' : 'h-8 bg-white/[0.12]'}`} />
+              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-5 py-4'}>
+                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.guests}</label>
+                <select value={guests} onChange={e => setGuests(Number(e.target.value))} className={`w-full bg-transparent text-white font-normal focus:outline-none pr-5 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'text-[14px]'}`}
                   style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}>
                   {t.booking.guestOptions.map((label, i) => <option key={i} value={i+1} style={{ background: '#141414', color: 'white' }}>{label}</option>)}
                 </select>
               </div>
-              <div className={`w-px bg-white/15 shrink-0 ${isSticky ? 'h-6' : 'h-10'}`} />
-              <div className={isSticky ? 'flex-[0.6] px-4 py-2' : 'flex-[0.6] px-5 py-5'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase text-white/50 ${isSticky ? 'text-[9px] mb-px' : 'text-[11px] mb-1'}`}>{t.booking.children}</label>
-                <select value={children} onChange={e => setChildren(Number(e.target.value))} className={`w-full bg-transparent text-white font-normal focus:outline-none pr-5 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'text-[15px]'}`}
+              <div className={`w-px shrink-0 ${isSticky ? 'h-6 bg-white/25' : 'h-8 bg-white/[0.12]'}`} />
+              <div className={isSticky ? 'flex-[0.6] px-4 py-2' : 'flex-[0.6] px-4 py-4'}>
+                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.children}</label>
+                <select value={children} onChange={e => setChildren(Number(e.target.value))} className={`w-full bg-transparent text-white font-normal focus:outline-none pr-5 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'text-[14px]'}`}
                   style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}>
                   {[0,1,2].map(v => <option key={v} value={v} style={{ background: '#141414', color: 'white' }}>{v}</option>)}
                 </select>
               </div>
-              <div className={`w-px bg-white/15 shrink-0 ${isSticky ? 'h-6' : 'h-10'}`} />
-              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-5 py-5'}>
-                <label className={`block font-semibold tracking-[1.5px] uppercase text-white/50 ${isSticky ? 'text-[9px] mb-px' : 'text-[11px] mb-1'}`}>{t.booking.type}</label>
-                <select value={propertyType} onChange={e => setPropertyType(e.target.value)} className={`w-full bg-transparent text-white font-normal focus:outline-none pr-5 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'text-[15px]'}`}
+              <div className={`w-px shrink-0 ${isSticky ? 'h-6 bg-white/25' : 'h-8 bg-white/[0.12]'}`} />
+              <div className={isSticky ? 'flex-1 px-4 py-2' : 'flex-1 px-4 py-4'}>
+                <label className={`block font-semibold tracking-[1.5px] uppercase ${isSticky ? 'text-[9px] mb-px text-white/60' : 'text-[10px] mb-0.5 text-white/50'}`}>{t.booking.type}</label>
+                <select value={propertyType} onChange={e => setPropertyType(e.target.value)} className={`w-full bg-transparent text-white font-normal focus:outline-none pr-5 cursor-pointer appearance-none ${isSticky ? 'text-[13px]' : 'text-[14px]'}`}
                   style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}>
                   {t.booking.typeOptions.map((label, i) => <option key={i} value={typeValues[i]} style={{ background: '#141414', color: 'white' }}>{label}</option>)}
                 </select>
               </div>
               <button onClick={handleSearch}
-                className={`uppercase shrink-0 cursor-pointer flex items-center gap-2 font-semibold transition-all duration-300 ${isSticky
-                  ? 'px-6 py-2 text-[11px] tracking-[1.5px]'
-                  : 'px-7 py-5 text-[13px] tracking-[1.5px]'
+                className={`uppercase shrink-0 cursor-pointer flex items-center justify-center gap-2 font-semibold transition-all duration-300 self-stretch ${isSticky
+                  ? 'px-6 text-[11px] tracking-[1.5px]'
+                  : 'px-7 text-[12px] tracking-[1.5px]'
                 }`}
                 style={isSticky
-                  ? { background: '#C8965A', color: '#F7F5F2', margin: '0' }
-                  : { background: 'white', color: 'black', margin: '-1px -1px -1px 0' }
+                  ? { background: '#C8965A', color: '#F7F5F2', borderRadius: 0 }
+                  : { background: 'rgba(255,255,255,0.1)', color: 'white' }
                 }
                 onMouseEnter={e => {
                   if (isSticky) { e.currentTarget.style.background = '#F7F5F2'; e.currentTarget.style.color = '#141414' }
-                  else { e.currentTarget.style.background = '#C8965A'; e.currentTarget.style.color = '#F7F5F2' }
+                  else { e.currentTarget.style.background = 'rgba(255,255,255,0.2)' }
                 }}
                 onMouseLeave={e => {
                   if (isSticky) { e.currentTarget.style.background = '#C8965A'; e.currentTarget.style.color = '#F7F5F2' }
-                  else { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'black' }
+                  else { e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }
                 }}
               >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 {t.booking.search}
               </button>
             </div>
 
             {/* Mobile */}
-            <div className="md:hidden flex flex-col">
+            <div className="md:hidden flex flex-col" style={isSticky ? undefined : { overflow: 'hidden' }}>
               <div className="flex">
-                <div className="flex-1 px-5 py-4 border-b border-white/10">
-                  <label className="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1">{t.booking.checkIn}</label>
-                  <input ref={checkInMobileRef} type="text" className="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none cursor-pointer" placeholder="Select" readOnly />
+                <div className="flex-1 px-5 py-3.5 border-b border-white/[0.12]">
+                  <label className="block text-[10px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-0.5">{t.booking.checkIn}</label>
+                  <input ref={checkInMobileRef} type="text" className="w-full bg-transparent text-white text-[14px] font-normal focus:outline-none cursor-pointer" placeholder="Select" readOnly />
                 </div>
-                <div className="w-px bg-white/10" />
-                <div className="flex-1 px-5 py-4 border-b border-white/10">
-                  <label className="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1">{t.booking.checkOut}</label>
-                  <input ref={checkOutMobileRef} type="text" className="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none cursor-pointer" placeholder="Select" readOnly />
+                <div className="w-px bg-white/[0.12]" />
+                <div className="flex-1 px-5 py-3.5 border-b border-white/[0.12]">
+                  <label className="block text-[10px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-0.5">{t.booking.checkOut}</label>
+                  <input ref={checkOutMobileRef} type="text" className="w-full bg-transparent text-white text-[14px] font-normal focus:outline-none cursor-pointer" placeholder="Select" readOnly />
                 </div>
               </div>
               <div className="flex">
-                <div className="flex-1 px-5 py-4 border-b border-white/10">
-                  <label className="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1">{t.booking.guests}</label>
-                  <select value={guests} onChange={e => setGuests(Number(e.target.value))} className="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none pr-5 cursor-pointer appearance-none"
+                <div className="flex-1 px-5 py-3.5 border-b border-white/[0.12]">
+                  <label className="block text-[10px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-0.5">{t.booking.guests}</label>
+                  <select value={guests} onChange={e => setGuests(Number(e.target.value))} className="w-full bg-transparent text-white text-[14px] font-normal focus:outline-none pr-5 cursor-pointer appearance-none"
                     style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}>
                     {t.booking.guestOptions.map((label, i) => <option key={i} value={i+1} style={{ background: '#141414', color: 'white' }}>{label}</option>)}
                   </select>
                 </div>
-                <div className="w-px bg-white/10" />
-                <div className="flex-[0.6] px-5 py-4 border-b border-white/10">
-                  <label className="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1">{t.booking.children}</label>
-                  <select value={children} onChange={e => setChildren(Number(e.target.value))} className="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none pr-5 cursor-pointer appearance-none"
+                <div className="w-px bg-white/[0.12]" />
+                <div className="flex-[0.6] px-5 py-3.5 border-b border-white/[0.12]">
+                  <label className="block text-[10px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-0.5">{t.booking.children}</label>
+                  <select value={children} onChange={e => setChildren(Number(e.target.value))} className="w-full bg-transparent text-white text-[14px] font-normal focus:outline-none pr-5 cursor-pointer appearance-none"
                     style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}>
                     {[0,1,2].map(v => <option key={v} value={v} style={{ background: '#141414', color: 'white' }}>{v}</option>)}
                   </select>
                 </div>
-                <div className="w-px bg-white/10" />
-                <div className="flex-1 px-5 py-4 border-b border-white/10">
-                  <label className="block text-[11px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-1">{t.booking.type}</label>
-                  <select value={propertyType} onChange={e => setPropertyType(e.target.value)} className="w-full bg-transparent text-white text-[15px] font-normal focus:outline-none pr-5 cursor-pointer appearance-none"
+                <div className="w-px bg-white/[0.12]" />
+                <div className="flex-1 px-5 py-3.5 border-b border-white/[0.12]">
+                  <label className="block text-[10px] font-semibold tracking-[1.5px] uppercase text-white/50 mb-0.5">{t.booking.type}</label>
+                  <select value={propertyType} onChange={e => setPropertyType(e.target.value)} className="w-full bg-transparent text-white text-[14px] font-normal focus:outline-none pr-5 cursor-pointer appearance-none"
                     style={{ backgroundImage: selectArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 4px center' }}>
                     {t.booking.typeOptions.map((label, i) => <option key={i} value={typeValues[i]} style={{ background: '#141414', color: 'white' }}>{label}</option>)}
                   </select>
                 </div>
               </div>
               <button onClick={handleSearch}
-                className="uppercase w-full py-4 cursor-pointer text-[13px] tracking-[1.5px] font-semibold transition-colors duration-300"
-                style={{ background: 'white', color: 'black' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#C8965A'; e.currentTarget.style.color = '#F7F5F2' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'black' }}
+                className="uppercase w-full py-3.5 cursor-pointer text-[12px] tracking-[1.5px] font-semibold transition-all duration-300"
+                style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.2)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
               >
                 {t.booking.search}
               </button>
