@@ -5,6 +5,16 @@ interface BookingParams {
   guests: number
   children: number
   messageTemplate: string
+  id?: string
+  name?: string
+  contact?: string
+}
+
+export function generateBookingId(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  let id = 'BTB-'
+  for (let i = 0; i < 4; i++) id += chars[Math.floor(Math.random() * chars.length)]
+  return id
 }
 
 export function getBookingMessage(params: BookingParams): string {
@@ -14,6 +24,9 @@ export function getBookingMessage(params: BookingParams): string {
     .replace('{dates}', `${params.checkIn} — ${params.checkOut}`)
     .replace('{guests}', String(params.guests))
     .replace('{children}', childText)
+    .replace('{id}', params.id ?? '')
+    .replace('{name}', params.name ?? '')
+    .replace('{contact}', params.contact ?? '')
 }
 
 export function bookVia(platform: 'telegram' | 'whatsapp' | 'instagram', message: string): void {

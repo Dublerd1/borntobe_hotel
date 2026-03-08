@@ -166,6 +166,76 @@ span.flatpickr-weekday {
 }
 .flatpickr-input { cursor: pointer !important; }
 
+/* ===== Flatpickr Light — for modal context ===== */
+.flatpickr-light {
+  background: #FFFFFF !important;
+  border: 2px solid #141414 !important;
+  box-shadow: 4px 4px 0 #141414 !important;
+}
+.flatpickr-light .flatpickr-months,
+.flatpickr-light .flatpickr-month {
+  background: #FFFFFF !important;
+  color: #141414 !important;
+}
+.flatpickr-light .flatpickr-current-month {
+  color: #141414 !important;
+}
+.flatpickr-light .flatpickr-current-month input.cur-year {
+  color: #141414 !important;
+}
+.flatpickr-light .flatpickr-current-month .flatpickr-monthDropdown-months {
+  background: #FFFFFF !important;
+  color: #141414 !important;
+}
+.flatpickr-light .flatpickr-months .flatpickr-prev-month,
+.flatpickr-light .flatpickr-months .flatpickr-next-month {
+  fill: #5C5C5C !important;
+}
+.flatpickr-light .flatpickr-months .flatpickr-prev-month:hover,
+.flatpickr-light .flatpickr-months .flatpickr-next-month:hover {
+  fill: var(--color-gold) !important;
+}
+.flatpickr-light .flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-light .flatpickr-months .flatpickr-next-month svg {
+  fill: inherit !important;
+}
+.flatpickr-light span.flatpickr-weekday {
+  color: #5C5C5C !important;
+  background: transparent !important;
+}
+.flatpickr-light .flatpickr-day {
+  color: #141414 !important;
+}
+.flatpickr-light .flatpickr-day:hover {
+  background: #EDEAE6 !important;
+}
+.flatpickr-light .flatpickr-day.selected,
+.flatpickr-light .flatpickr-day.startRange,
+.flatpickr-light .flatpickr-day.endRange {
+  background: var(--color-gold) !important;
+  border-color: var(--color-gold) !important;
+  color: #FFFFFF !important;
+}
+.flatpickr-light .flatpickr-day.today {
+  border-color: var(--color-gold) !important;
+  color: var(--color-gold) !important;
+}
+.flatpickr-light .flatpickr-day.today:hover {
+  background: var(--color-gold) !important;
+  color: #FFFFFF !important;
+}
+.flatpickr-light .flatpickr-day.flatpickr-disabled {
+  color: #D9D5D0 !important;
+}
+.flatpickr-light .flatpickr-day.prevMonthDay,
+.flatpickr-light .flatpickr-day.nextMonthDay {
+  color: #D9D5D0 !important;
+}
+.flatpickr-light .flatpickr-innerContainer,
+.flatpickr-light .flatpickr-rContainer {
+  background: transparent !important;
+}
+
 /* ===== Navbar ===== */
 nav.scrolled {
   background: #141414 !important;
