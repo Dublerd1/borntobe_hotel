@@ -333,7 +333,7 @@ export default function StayBooking({ lang, rooms }: Props) {
                   : `${nights} ${nightsLabel} \u00b7 $${price.total.toLocaleString()} ${t.rooms.totalLabel}`
 
                 return (
-                  <div key={room.id} className="fade-up cursor-pointer overflow-hidden transition-[box-shadow,transform] duration-300"
+                  <div key={room.id} className="fade-up cursor-pointer overflow-hidden transition-[box-shadow,transform] duration-300 flex flex-col"
                     style={{ background: '#FFFFFF', transitionDelay: `${i*0.08}s` }}
                     onClick={() => { setModalRoom(room); setModalNights(nights); setActivePhoto(0); document.body.style.overflow = 'hidden' }}
                     onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.12)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
@@ -344,7 +344,7 @@ export default function StayBooking({ lang, rooms }: Props) {
                         onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
                         onMouseLeave={e => e.currentTarget.style.transform = 'none'} />
                     </div>
-                    <div className="p-5 pb-0">
+                    <div className="p-5 pb-0 flex-1">
                       <p className="text-[11px] font-medium uppercase mb-2" style={{ letterSpacing: '0.1em', color: '#5C5C5C' }}>{typeLabel}</p>
                       <h3 className="text-[18px] font-semibold mb-1" style={{ letterSpacing: '0.02em', color: '#141414' }}>{name}</h3>
                       <p className="text-[12px] uppercase mb-3" style={{ letterSpacing: '0.08em', color: '#5C5C5C' }}>{features.join(' \u00b7 ')}</p>
@@ -356,7 +356,7 @@ export default function StayBooking({ lang, rooms }: Props) {
                       </div>
                       <p className="text-[12px] mb-5" style={{ color: '#5C5C5C' }}>{totalText}</p>
                     </div>
-                    <div className="text-[13px] font-semibold uppercase py-3.5 text-center transition-colors duration-300"
+                    <div className="text-[13px] font-semibold uppercase py-3.5 text-center transition-colors duration-300 mt-auto"
                       style={{ background: '#141414', color: '#F7F5F2', letterSpacing: '0.1em' }}
                       onMouseEnter={e => e.currentTarget.style.background = '#C8965A'}
                       onMouseLeave={e => e.currentTarget.style.background = '#141414'}
