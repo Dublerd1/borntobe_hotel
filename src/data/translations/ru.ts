@@ -22,6 +22,7 @@ export const ru: Translations = {
     selectYourStay: 'ВЫБЕРИТЕ НОМЕР',
     roomsFound: 'номеров найдено',
     viewDetails: 'ПОДРОБНЕЕ',
+    edit: 'ИЗМЕНИТЬ',
     guestOptions: ['1 Гость', '2 Гостя', '3 Гостя', '4 Гостя', '5 Гостей', '6 Гостей'],
     typeOptions: ['Любой', 'Апартамент', 'Делюкс Апартамент', 'Таунхаус'],
   },

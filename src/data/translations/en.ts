@@ -20,6 +20,7 @@ export const en = {
     selectYourStay: 'SELECT YOUR STAY',
     roomsFound: 'rooms found',
     viewDetails: 'VIEW DETAILS',
+    edit: 'EDIT',
     guestOptions: ['1 Adult', '2 Adults', '3 Adults', '4 Adults', '5 Adults', '6 Adults'],
     typeOptions: ['Any', 'Apartment', 'Deluxe Apt', 'Townhouse'],
   },
