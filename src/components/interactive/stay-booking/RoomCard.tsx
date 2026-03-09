@@ -25,27 +25,19 @@ export default function RoomCard({ room, nights, lang, t, index, onSelect }: Pro
   return (
     <div
       className="fade-up cursor-pointer flex flex-col group relative"
-      style={{ background: '#FFFFFF', border: '2px solid #141414', boxShadow: '4px 4px 0 #141414', transitionDelay: `${index * 0.08}s`, transition: 'box-shadow 0.4s ease, transform 0.4s ease' }}
+      style={{ background: '#FFFFFF', transitionDelay: `${index * 0.08}s`, transition: 'box-shadow 0.3s ease, transform 0.3s ease' }}
       onClick={onSelect}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = '6px 6px 0 #C8965A'
-        e.currentTarget.style.transform = 'translate(-2px, -2px)'
-        const lbl = e.currentTarget.querySelector('.card-type-label') as HTMLElement
-        if (lbl) lbl.style.color = '#C8965A'
-        const badge = e.currentTarget.querySelector('.card-price-badge') as HTMLElement
-        if (badge) badge.style.background = '#C8965A'
+        e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.08)'
+        e.currentTarget.style.transform = 'translateY(-4px)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = '4px 4px 0 #141414'
+        e.currentTarget.style.boxShadow = 'none'
         e.currentTarget.style.transform = 'none'
-        const lbl = e.currentTarget.querySelector('.card-type-label') as HTMLElement
-        if (lbl) lbl.style.color = '#141414'
-        const badge = e.currentTarget.querySelector('.card-price-badge') as HTMLElement
-        if (badge) badge.style.background = '#141414'
       }}
     >
       {/* Gold top line — appears on hover */}
-      <div className="absolute top-[-2px] left-[-2px] right-[-2px] h-[3px] z-10 transition-transform duration-500 origin-left scale-x-0 group-hover:scale-x-100" style={{ background: '#C8965A' }} />
+      <div className="absolute top-0 left-0 right-0 h-[3px] z-10 transition-transform duration-500 origin-left scale-x-0 group-hover:scale-x-100" style={{ background: '#C8965A' }} />
 
       {/* Photo with hover crossfade */}
       <div className="overflow-hidden relative">
@@ -62,15 +54,11 @@ export default function RoomCard({ room, nights, lang, t, index, onSelect }: Pro
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="0" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="m21 15-5-5L5 21" /></svg>
           <span className="text-white text-[11px] font-medium">{room.photos.length}</span>
         </div>
-        {/* Price badge */}
-        <div className="absolute top-0 left-0 px-3 py-1.5 card-price-badge" style={{ background: '#141414', transition: 'background 0.3s ease' }}>
-          <span className="text-[12px] font-bold text-white tracking-wide">${price.perNight}<span className="font-normal text-white/70 text-[10px] ml-0.5">{price.isMonthly ? '/mo' : '/night'}</span></span>
-        </div>
       </div>
 
       <div className="p-5 md:p-6 flex-1 flex flex-col justify-between">
         <div>
-          <p className="text-[11px] font-semibold uppercase mb-3 card-type-label" style={{ letterSpacing: '0.12em', color: '#141414', transition: 'color 0.3s ease' }}>{typeLabel}</p>
+          <p className="text-[11px] font-semibold uppercase mb-3 transition-colors duration-300 group-hover:text-[#C8965A]" style={{ letterSpacing: '0.12em', color: '#5C5C5C' }}>{typeLabel}</p>
           <h3 className="text-[18px] md:text-[20px] font-bold uppercase mb-2" style={{ letterSpacing: '0.04em', color: '#141414' }}>{name}</h3>
           <p className="text-[11px] md:text-[12px] uppercase mb-4" style={{ letterSpacing: '0.08em', color: '#5C5C5C' }}>{features.join(' \u00b7 ')}</p>
         </div>
